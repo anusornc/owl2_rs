@@ -58,4 +58,4 @@ To contribute to the documentation:
 
 - `src/` - Source files for the documentation
 - `book.toml` - Configuration file for mdBook
-- `README.md` - This file
+- `README.md` - This fileThis file was last updated on September 3, 2025
