@@ -60,3 +60,4 @@ To contribute to the documentation:
 - `book.toml` - Configuration file for mdBook
 - `README.md` - This fileThis file was last updated on September 3, 2025
 Last build triggered on: September 3, 2025
+Build verification step
