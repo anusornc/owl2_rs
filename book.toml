@@ -6,8 +6,6 @@ src = "docs"
 title = "owl2_rs Documentation"
 
 [output.html]
-theme = "rust"
-default-theme = "rust"
 git-repository-url = "https://github.com/anusornc/owl2_rs2"
 git-repository-icon = "fa-github"
 edit-url-template = "https://github.com/anusornc/owl2_rs2/edit/main/{path}"
