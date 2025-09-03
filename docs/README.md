@@ -62,3 +62,4 @@ To contribute to the documentation:
 Last build triggered on: September 3, 2025
 Build verification step
 Verification build triggered
+Deploy both documentation types
