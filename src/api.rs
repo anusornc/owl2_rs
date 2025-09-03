@@ -1,6 +1,16 @@
 //! # Public API for owl2_rs
 //!
 //! This module provides a clean, easy-to-use public API for the owl2_rs library.
+//!
+//! The API module is the main entry point for most users of the owl2_rs library.
+//! It provides functions for loading ontologies and a Reasoner struct for
+//! performing reasoning tasks.
+//!
+//! ## Error Handling
+//!
+//! All functions in this module return a Result type with the Owl2RsError enum
+//! for error handling. This enum provides detailed information about what went
+//! wrong during parsing or I/O operations.
 
 use crate::{
     parser::OWLParser,
@@ -11,18 +21,30 @@ use std::{path::Path, io};
 use thiserror::Error;
 
 /// Errors that can occur when working with owl2_rs.
+///
+/// This enum provides detailed error information for different types of failures
+/// that can occur when working with OWL 2 ontologies.
 #[derive(Error, Debug)]
 pub enum Owl2RsError {
     /// An error occurred during parsing.
+    ///
+    /// This error is returned when the OWL 2 parser encounters invalid syntax
+    /// or other parsing issues.
     #[error("Parsing error: {0}")]
     ParsingError(#[from] pest::error::Error<crate::parser::Rule>),
     
     /// An I/O error occurred.
+    ///
+    /// This error is returned when there are issues reading from or writing to
+    /// files or other I/O operations.
     #[error("I/O error: {0}")]
     IoError(#[from] io::Error),
 }
 
 /// Loads an ontology from a string in OWL 2 Functional-Style Syntax.
+///
+/// This function parses an OWL 2 ontology represented as a string in
+/// Functional-Style Syntax and returns an Ontology struct.
 ///
 /// # Arguments
 ///

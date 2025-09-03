@@ -1,11 +1,29 @@
 //! # owl2_rs
 //!
-//! A Rust library for the Web Ontology Language (OWL2).
+//! A Rust library for the Web Ontology Language (OWL 2).
 //!
 //! ## Overview
 //!
 //! The owl2_rs library provides functionality for working with OWL 2 ontologies,
 //! including parsing, consistency checking, classification, and realization.
+//!
+//! OWL 2 is a powerful ontology language that allows you to represent knowledge
+//! in a machine-readable format. This library provides tools to work with OWL 2
+//! ontologies in Rust applications.
+//!
+//! ## Features
+//!
+//! - Parse OWL 2 ontologies in Functional-Style Syntax
+//! - Check ontology consistency (satisfiability)
+//! - Compute class hierarchies (classification)
+//! - Realize individuals (find their most specific types)
+//! - Instance checking
+//!
+//! ## Modules
+//!
+//! - [`api`] - The main public API for the library
+//! - [`parser`] - The OWL 2 parser implementation
+//! - [`reasoner`] - The tableau-based reasoner implementation
 //!
 //! ## Basic Usage
 //!
@@ -23,6 +41,23 @@
 //! let mut reasoner = Reasoner::new(ontology);
 //! let is_consistent = reasoner.is_consistent();
 //! ```
+//!
+//! ## Documentation
+//!
+//! For comprehensive documentation, please see:
+//!
+//! - [User Guide](https://anusornc.github.io/owl2_rs2/) - For detailed usage instructions
+//! - [API Documentation](https://anusornc.github.io/owl2_rs2/doc/owl2_rs/) - For detailed API reference
+//! - [Tutorials](https://anusornc.github.io/owl2_rs2/tutorials.html) - For step-by-step examples
+//!
+//! ## Examples
+//!
+//! See the `examples/` directory in the repository for complete example programs:
+//!
+//! - `basic_reasoning.rs` - Basic reasoning functionality
+//! - `classification_hierarchy_test.rs` - Testing classification hierarchies
+//! - `classification_test.rs` - Classification testing
+//! - `comprehensive_reasoning.rs` - Comprehensive reasoning test
 
 pub mod parser;
 pub mod reasoner;
