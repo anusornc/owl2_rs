@@ -130,7 +130,7 @@ fn demonstrate_traceability_queries(individual_types: &std::collections::HashMap
     }
 }
 
-fn show_supply_chain_relationships(hierarchy: &owl2_rs::reasoner::ClassHierarchy) {
+fn show_supply_chain_relationships(_hierarchy: &owl2_rs::reasoner::ClassHierarchy) {
     // In a more complete implementation, we would query the hierarchy for specific relationships
     println!("  Class hierarchy relationships have been computed");
     println!("  The ontology correctly defines:");
