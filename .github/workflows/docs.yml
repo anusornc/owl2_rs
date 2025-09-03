@@ -43,10 +43,19 @@ jobs:
       - name: Build mdBook documentation
         run: mdbook build
 
+      - name: Prepare documentation for deployment
+        run: |
+          # Create directory structure for both documentation types
+          mkdir -p ./docs/doc
+          # Copy mdBook documentation to root
+          cp -r ./book/* ./docs/
+          # Copy Rust API documentation to docs/doc
+          cp -r ./target/doc/* ./docs/doc/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./book
+          path: ./docs
 
   # Deployment job
   deploy:
