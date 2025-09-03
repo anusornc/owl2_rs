@@ -2,7 +2,7 @@
 name = "owl2_rs"
 version = "0.1.0"
 edition = "2024"
-authors = ["OWL2_rs Development Team"]
+authors = ["owl2_rs Development Team"]
 description = "A Rust library for the Web Ontology Language (OWL 2)"
 license = "MIT"
 repository = "https://github.com/your-username/owl2_rs"

@@ -1,1 +1,80 @@
+# Compiled files
 /target
+**/target
+
+# IDE files
+**/*.swp
+**/*.swo
+**/*~
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+
+# Log files
+*.log
+
+# Temporary files
+tmp/
+temp/
+
+# Coverage files
+coverage/
+*.profraw
+*.profdata
+
+# Documentation build files
+docs/
+book/
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# Test files
+test_output/
+test_results/
+
+# Build artifacts
+*.o
+*.so
+*.dll
+*.dylib
+*.exe
+
+# Cargo lock files (except the main one)
+**/Cargo.lock
+!/Cargo.lock
+
+# Generated files
+**/generated/
+**/*.generated.*
+
+# Cache files
+.cache/
+**/.cache
+
+# Dependency directories
+node_modules/
+vendor/
+
+# Distribution files
+dist/
+build/
+pkg/
+
+# Examples binaries
+**/examples/**/*
+!/examples/**/*.rs
+
+# Test binaries
+**/tests/**/*
+!/tests/**/*.rs
