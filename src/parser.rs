@@ -559,6 +559,7 @@ impl OWLParser {
                 let axiom = OWLParser::parse_axiom(axiom_pair.as_str()).unwrap();
                 ontology.axioms.push(axiom);
             }
+            // Skip comments (they don't need to be processed)
         }
 
         Ok(ontology)

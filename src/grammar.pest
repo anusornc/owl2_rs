@@ -1,5 +1,7 @@
 WHITESPACE = _{" " | "\t" | "\n" | "\r"}
 
+comment = @{ "#" ~ (!"\n" ~ ANY)* }
+
 iri_content = @{ ( !">" ~ ANY )* }
 iri = { "<" ~ iri_content ~ ">" }
 
@@ -87,4 +89,4 @@ assertion = { same_individual | different_individuals | class_assertion | object
 
 axiom = { class_axiom | object_property_axiom | data_property_axiom | assertion }
 
-ontology = { "Ontology(" ~ iri? ~ axiom* ~ ")" }
+ontology = { "Ontology(" ~ iri? ~ (axiom | comment)* ~ ")" }

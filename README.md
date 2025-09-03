@@ -50,7 +50,32 @@ let hierarchy = reasoner.classify();
 
 ## Examples
 
-See the `examples/` directory for more detailed examples.
+See the `examples/` directory for more detailed examples:
+
+- `basic_reasoning.rs` - Basic reasoning functionality
+- `gs1_epcis_integration.rs` - Integration with GS1 and EPCIS standards
+
+## Testing
+
+The project includes comprehensive tests:
+
+- Unit tests for all data structures and parser components
+- Integration tests with standard OWL 2 test cases
+- Specialized tests for GS1 and EPCIS ontologies
+
+To run all tests:
+```bash
+cargo test
+```
+
+To run specific test suites:
+```bash
+# Run GS1/EPCIS tests
+cargo test --test gs1_epcis_tests
+
+# Run integration tests
+cargo test --test integration_tests
+```
 
 ## License
 

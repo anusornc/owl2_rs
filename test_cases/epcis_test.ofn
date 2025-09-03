@@ -1,0 +1,29 @@
+Ontology(<http://epcis.org/ontology/Test>
+  # Define the basic event hierarchy
+  SubClassOf(Class(<http://epcis.org/ontology/ObjectEvent>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  SubClassOf(Class(<http://epcis.org/ontology/AggregationEvent>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  SubClassOf(Class(<http://epcis.org/ontology/TransactionEvent>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  SubClassOf(Class(<http://epcis.org/ontology/TransformationEvent>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  
+  # Define property domains and ranges for events
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.org/ontology/epcList>) Class(<http://epcis.org/ontology/ObjectEvent>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.org/ontology/epcList>) Class(<http://epcis.org/ontology/EPC>))
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.org/ontology/bizLocation>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.org/ontology/bizLocation>) Class(<http://epcis.org/ontology/BusinessLocation>))
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.org/ontology/bizStep>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.org/ontology/bizStep>) Class(<http://epcis.org/ontology/BusinessStep>))
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.org/ontology/disposition>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.org/ontology/disposition>) Class(<http://epcis.org/ontology/Disposition>))
+  DataPropertyDomain(DataProperty(<http://epcis.org/ontology/eventTime>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  DataPropertyRange(DataProperty(<http://epcis.org/ontology/eventTime>) Datatype(<http://www.w3.org/2001/XMLSchema#dateTime>))
+  DataPropertyDomain(DataProperty(<http://epcis.org/ontology/quantity>) Class(<http://epcis.org/ontology/EPC>))
+  DataPropertyRange(DataProperty(<http://epcis.org/ontology/quantity>) Datatype(<http://www.w3.org/2001/XMLSchema#integer>))
+  
+  # Define individuals and their class assertions
+  ClassAssertion(Class(<http://epcis.org/ontology/EPCISEvent>) NamedIndividual(<http://example.com/objectEvent1>))
+  ClassAssertion(Class(<http://epcis.org/ontology/EPC>) NamedIndividual(<http://example.com/epc1>))
+  ClassAssertion(Class(<http://epcis.org/ontology/BusinessLocation>) NamedIndividual(<http://example.com/location1>))
+  ClassAssertion(Class(<http://epcis.org/ontology/ReadPoint>) NamedIndividual(<http://example.com/readPoint1>))
+  ClassAssertion(Class(<http://epcis.org/ontology/BusinessStep>) NamedIndividual(<http://epcis.org/ontology/step/shipping>))
+  ClassAssertion(Class(<http://epcis.org/ontology/Disposition>) NamedIndividual(<http://epcis.org/ontology/disp/in_transit>))
+)

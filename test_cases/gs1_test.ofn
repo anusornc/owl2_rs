@@ -1,0 +1,31 @@
+Ontology(<http://gs1.org/ontology/Test>
+  # Define basic GS1 classes and their relationships
+  SubClassOf(Class(<http://gs1.org/ontology/Product>) ObjectSomeValuesFrom(ObjectProperty(<http://gs1.org/ontology/manufacturer>) Class(<http://gs1.org/ontology/Organization>)))
+  SubClassOf(Class(<http://gs1.org/ontology/Organization>) ObjectSomeValuesFrom(ObjectProperty(<http://gs1.org/ontology/hasLocation>) Class(<http://gs1.org/ontology/Location>)))
+  
+  # Define property domains and ranges
+  ObjectPropertyDomain(ObjectProperty(<http://gs1.org/ontology/manufacturer>) Class(<http://gs1.org/ontology/Product>))
+  ObjectPropertyRange(ObjectProperty(<http://gs1.org/ontology/manufacturer>) Class(<http://gs1.org/ontology/Organization>))
+  ObjectPropertyDomain(ObjectProperty(<http://gs1.org/ontology/hasLocation>) Class(<http://gs1.org/ontology/Organization>))
+  ObjectPropertyRange(ObjectProperty(<http://gs1.org/ontology/hasLocation>) Class(<http://gs1.org/ontology/Location>))
+  DataPropertyDomain(DataProperty(<http://gs1.org/ontology/gtin>) Class(<http://gs1.org/ontology/Product>))
+  DataPropertyRange(DataProperty(<http://gs1.org/ontology/gtin>) Datatype(<http://www.w3.org/2001/XMLSchema#string>))
+  DataPropertyDomain(DataProperty(<http://gs1.org/ontology/productName>) Class(<http://gs1.org/ontology/Product>))
+  DataPropertyRange(DataProperty(<http://gs1.org/ontology/productName>) Datatype(<http://www.w3.org/2001/XMLSchema#string>))
+  DataPropertyDomain(DataProperty(<http://gs1.org/ontology/address>) Class(<http://gs1.org/ontology/Location>))
+  DataPropertyRange(DataProperty(<http://gs1.org/ontology/address>) Datatype(<http://www.w3.org/2001/XMLSchema#string>))
+  
+  # Define individuals and their class assertions
+  ClassAssertion(Class(<http://gs1.org/ontology/Organization>) NamedIndividual(<http://example.com/company1>))
+  ClassAssertion(Class(<http://gs1.org/ontology/Product>) NamedIndividual(<http://example.com/product1>))
+  ClassAssertion(Class(<http://gs1.org/ontology/Location>) NamedIndividual(<http://example.com/location1>))
+  
+  # Define property assertions
+  ObjectPropertyAssertion(ObjectProperty(<http://gs1.org/ontology/manufacturer>) NamedIndividual(<http://example.com/product1>) NamedIndividual(<http://example.com/company1>))
+  ObjectPropertyAssertion(ObjectProperty(<http://gs1.org/ontology/hasLocation>) NamedIndividual(<http://example.com/company1>) NamedIndividual(<http://example.com/location1>))
+  
+  # Define data property assertions
+  DataPropertyAssertion(DataProperty(<http://gs1.org/ontology/gtin>) NamedIndividual(<http://example.com/product1>) "1234567890128"^^<http://www.w3.org/2001/XMLSchema#string>)
+  DataPropertyAssertion(DataProperty(<http://gs1.org/ontology/productName>) NamedIndividual(<http://example.com/product1>) "Test Product"^^<http://www.w3.org/2001/XMLSchema#string>)
+  DataPropertyAssertion(DataProperty(<http://gs1.org/ontology/address>) NamedIndividual(<http://example.com/location1>) "123 Main St, Anytown, USA"^^<http://www.w3.org/2001/XMLSchema#string>)
+)

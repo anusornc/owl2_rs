@@ -7,6 +7,7 @@ use owl2_rs::{
     parser::OWLParser,
     reasoner::TableauReasoner,
 };
+use std::path::Path;
 
 /// A test case for OWL2 reasoning.
 #[derive(Debug)]
@@ -78,4 +79,71 @@ fn test_subclass_relationship() {
     };
     
     run_owl2_test_case(test_case);
+}
+
+#[test]
+fn test_ontology_with_comments() {
+    let test_case = OWL2TestCase {
+        name: "Ontology with Comments Test".to_string(),
+        ontology_str: r#"Ontology(<http://example.com/test>
+  # This is a comment
+  SubClassOf(Class(<http://example.com/Student>) Class(<http://example.com/Person>))
+  # Another comment
+  ClassAssertion(Class(<http://example.com/Student>) NamedIndividual(<http://example.com/john>))
+  # Final comment
+)"#.to_string(),
+        expected_consistent: true,
+    };
+    
+    run_owl2_test_case(test_case);
+}
+
+#[test]
+fn test_gs1_ontology_parsing() {
+    let path = Path::new("test_cases/gs1_test.ofn");
+    let ontology_str = std::fs::read_to_string(path).expect("Failed to read GS1 test file");
+    let ontology = OWLParser::parse_ontology(&ontology_str).expect("Failed to parse GS1 ontology");
+    
+    // Check that we have the expected number of axioms
+    assert!(ontology.axioms.len() > 10);
+    
+    println!("Successfully parsed GS1 ontology with {} axioms", ontology.axioms.len());
+}
+
+#[test]
+fn test_gs1_ontology_consistency() {
+    let path = Path::new("test_cases/gs1_test.ofn");
+    let ontology_str = std::fs::read_to_string(path).expect("Failed to read GS1 test file");
+    let ontology = OWLParser::parse_ontology(&ontology_str).expect("Failed to parse GS1 ontology");
+    let mut reasoner = TableauReasoner::new(ontology);
+    
+    // Check that the ontology is consistent
+    assert!(reasoner.is_consistent());
+    
+    println!("GS1 ontology is consistent");
+}
+
+#[test]
+fn test_epcis_ontology_parsing() {
+    let path = Path::new("test_cases/epcis_test.ofn");
+    let ontology_str = std::fs::read_to_string(path).expect("Failed to read EPCIS test file");
+    let ontology = OWLParser::parse_ontology(&ontology_str).expect("Failed to parse EPCIS ontology");
+    
+    // Check that we have the expected number of axioms
+    assert!(ontology.axioms.len() > 10);
+    
+    println!("Successfully parsed EPCIS ontology with {} axioms", ontology.axioms.len());
+}
+
+#[test]
+fn test_epcis_ontology_consistency() {
+    let path = Path::new("test_cases/epcis_test.ofn");
+    let ontology_str = std::fs::read_to_string(path).expect("Failed to read EPCIS test file");
+    let ontology = OWLParser::parse_ontology(&ontology_str).expect("Failed to parse EPCIS ontology");
+    let mut reasoner = TableauReasoner::new(ontology);
+    
+    // Check that the ontology is consistent
+    assert!(reasoner.is_consistent());
+    
+    println!("EPCIS ontology is consistent");
 }
