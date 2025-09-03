@@ -29,8 +29,7 @@ coverage/
 *.profraw
 *.profdata
 
-# Documentation build files
-docs/
+# Documentation build files (exclude built documentation but not source)
 book/
 
 # Environment files
