@@ -54,6 +54,7 @@ See the `examples/` directory for more detailed examples:
 
 - `basic_reasoning.rs` - Basic reasoning functionality
 - `gs1_epcis_integration.rs` - Integration with GS1 and EPCIS standards
+- `uht_milk_traceability.rs` - Real-world UHT milk supply chain traceability example
 
 ## Testing
 
@@ -62,6 +63,7 @@ The project includes comprehensive tests:
 - Unit tests for all data structures and parser components
 - Integration tests with standard OWL 2 test cases
 - Specialized tests for GS1 and EPCIS ontologies
+- Real-world supply chain traceability tests
 
 To run all tests:
 ```bash
@@ -72,6 +74,9 @@ To run specific test suites:
 ```bash
 # Run GS1/EPCIS tests
 cargo test --test gs1_epcis_tests
+
+# Run UHT milk supply chain tests
+cargo test --test uht_supplychain_tests
 
 # Run integration tests
 cargo test --test integration_tests

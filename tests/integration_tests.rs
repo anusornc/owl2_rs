@@ -147,3 +147,28 @@ fn test_epcis_ontology_consistency() {
     
     println!("EPCIS ontology is consistent");
 }
+
+#[test]
+fn test_uht_milk_supplychain_ontology_parsing() {
+    let path = Path::new("test_cases/uht_milk_supplychain.ofn");
+    let ontology_str = std::fs::read_to_string(path).expect("Failed to read UHT milk supply chain test file");
+    let ontology = OWLParser::parse_ontology(&ontology_str).expect("Failed to parse UHT milk supply chain ontology");
+    
+    // Check that we have the expected number of axioms
+    assert!(ontology.axioms.len() > 20);
+    
+    println!("Successfully parsed UHT milk supply chain ontology with {} axioms", ontology.axioms.len());
+}
+
+#[test]
+fn test_uht_milk_supplychain_consistency() {
+    let path = Path::new("test_cases/uht_milk_supplychain.ofn");
+    let ontology_str = std::fs::read_to_string(path).expect("Failed to read UHT milk supply chain test file");
+    let ontology = OWLParser::parse_ontology(&ontology_str).expect("Failed to parse UHT milk supply chain ontology");
+    let mut reasoner = TableauReasoner::new(ontology);
+    
+    // Check that the ontology is consistent
+    assert!(reasoner.is_consistent());
+    
+    println!("UHT milk supply chain ontology is consistent");
+}

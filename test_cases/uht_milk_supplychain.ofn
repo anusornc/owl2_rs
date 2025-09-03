@@ -1,0 +1,90 @@
+Ontology(<http://epcis.example.com/uht-milk-supplychain>
+  # EPCIS Core Classes for UHT Milk Supply Chain
+  SubClassOf(Class(<http://epcis.example.com/UHTMilkProduct>) Class(<http://epcis.org/ontology/EPC>))
+  SubClassOf(Class(<http://epcis.example.com/Farm>) Class(<http://epcis.org/ontology/BusinessLocation>))
+  SubClassOf(Class(<http://epcis.example.com/ProcessingFacility>) Class(<http://epcis.org/ontology/BusinessLocation>))
+  SubClassOf(Class(<http://epcis.example.com/DistributionCenter>) Class(<http://epcis.org/ontology/BusinessLocation>))
+  SubClassOf(Class(<http://epcis.example.com/RetailStore>) Class(<http://epcis.org/ontology/BusinessLocation>))
+  SubClassOf(Class(<http://epcis.example.com/ObjectEvent>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  SubClassOf(Class(<http://epcis.example.com/AggregationEvent>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  SubClassOf(Class(<http://epcis.example.com/TransformationEvent>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  
+  # Business Steps specific to UHT Milk Supply Chain
+  SubClassOf(Class(<http://epcis.example.com/Milking>) Class(<http://epcis.org/ontology/BusinessStep>))
+  SubClassOf(Class(<http://epcis.example.com/Pasteurization>) Class(<http://epcis.org/ontology/BusinessStep>))
+  SubClassOf(Class(<http://epcis.example.com/UHTTreatment>) Class(<http://epcis.org/ontology/BusinessStep>))
+  SubClassOf(Class(<http://epcis.example.com/Homogenization>) Class(<http://epcis.org/ontology/BusinessStep>))
+  SubClassOf(Class(<http://epcis.example.com/Packaging>) Class(<http://epcis.org/ontology/BusinessStep>))
+  SubClassOf(Class(<http://epcis.example.com/Storage>) Class(<http://epcis.org/ontology/BusinessStep>))
+  SubClassOf(Class(<http://epcis.example.com/Transportation>) Class(<http://epcis.org/ontology/BusinessStep>))
+  SubClassOf(Class(<http://epcis.example.com/Selling>) Class(<http://epcis.org/ontology/BusinessStep>))
+  
+  # Dispositions specific to UHT Milk Supply Chain
+  SubClassOf(Class(<http://epcis.example.com/InProduction>) Class(<http://epcis.org/ontology/Disposition>))
+  SubClassOf(Class(<http://epcis.example.com/InTransit>) Class(<http://epcis.org/ontology/Disposition>))
+  SubClassOf(Class(<http://epcis.example.com/InStock>) Class(<http://epcis.org/ontology/Disposition>))
+  SubClassOf(Class(<http://epcis.example.com/Active>) Class(<http://epcis.org/ontology/Disposition>))
+  SubClassOf(Class(<http://epcis.example.com/Sold>) Class(<http://epcis.org/ontology/Disposition>))
+  
+  # Custom Properties for UHT Milk Supply Chain
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.example.com/producedFrom>) Class(<http://epcis.example.com/UHTMilkProduct>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.example.com/producedFrom>) Class(<http://epcis.org/ontology/EPC>))
+  
+  # EPCIS Properties
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.org/ontology/epcList>) Class(<http://epcis.example.com/ObjectEvent>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.org/ontology/epcList>) Class(<http://epcis.org/ontology/EPC>))
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.org/ontology/bizLocation>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.org/ontology/bizLocation>) Class(<http://epcis.org/ontology/BusinessLocation>))
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.org/ontology/bizStep>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.org/ontology/bizStep>) Class(<http://epcis.org/ontology/BusinessStep>))
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.org/ontology/disposition>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.org/ontology/disposition>) Class(<http://epcis.org/ontology/Disposition>))
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.org/ontology/childEPCs>) Class(<http://epcis.example.com/AggregationEvent>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.org/ontology/childEPCs>) Class(<http://epcis.org/ontology/EPC>))
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.org/ontology/inputEPCList>) Class(<http://epcis.example.com/TransformationEvent>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.org/ontology/inputEPCList>) Class(<http://epcis.org/ontology/EPC>))
+  ObjectPropertyDomain(ObjectProperty(<http://epcis.org/ontology/outputEPCList>) Class(<http://epcis.example.com/TransformationEvent>))
+  ObjectPropertyRange(ObjectProperty(<http://epcis.org/ontology/outputEPCList>) Class(<http://epcis.org/ontology/EPC>))
+  
+  # Data Properties
+  DataPropertyDomain(DataProperty(<http://epcis.org/ontology/eventTime>) Class(<http://epcis.org/ontology/EPCISEvent>))
+  DataPropertyRange(DataProperty(<http://epcis.org/ontology/eventTime>) Datatype(<http://www.w3.org/2001/XMLSchema#dateTime>))
+  DataPropertyDomain(DataProperty(<http://epcis.org/ontology/quantity>) Class(<http://epcis.org/ontology/EPC>))
+  DataPropertyRange(DataProperty(<http://epcis.org/ontology/quantity>) Datatype(<http://www.w3.org/2001/XMLSchema#integer>))
+  DataPropertyDomain(DataProperty(<http://epcis.example.com/lotNumber>) Class(<http://epcis.org/ontology/EPC>))
+  DataPropertyRange(DataProperty(<http://epcis.example.com/lotNumber>) Datatype(<http://www.w3.org/2001/XMLSchema#string>))
+  DataPropertyDomain(DataProperty(<http://epcis.example.com/expiryDate>) Class(<http://epcis.org/ontology/EPC>))
+  DataPropertyRange(DataProperty(<http://epcis.example.com/expiryDate>) Datatype(<http://www.w3.org/2001/XMLSchema#dateTime>))
+  DataPropertyDomain(DataProperty(<http://epcis.example.com/batchNumber>) Class(<http://epcis.org/ontology/EPC>))
+  DataPropertyRange(DataProperty(<http://epcis.example.com/batchNumber>) Datatype(<http://www.w3.org/2001/XMLSchema#string>))
+  
+  # Business Locations
+  ClassAssertion(Class(<http://epcis.example.com/Farm>) NamedIndividual(<http://epcis.example.com/locations/farm1>))
+  ClassAssertion(Class(<http://epcis.example.com/ProcessingFacility>) NamedIndividual(<http://epcis.example.com/locations/processing-facility>))
+  ClassAssertion(Class(<http://epcis.example.com/DistributionCenter>) NamedIndividual(<http://epcis.example.com/locations/distribution-center>))
+  ClassAssertion(Class(<http://epcis.example.com/RetailStore>) NamedIndividual(<http://epcis.example.com/locations/retail-store>))
+  
+  # Business Steps
+  ClassAssertion(Class(<http://epcis.example.com/Milking>) NamedIndividual(<http://epcis.example.com/steps/milking>))
+  ClassAssertion(Class(<http://epcis.example.com/Pasteurization>) NamedIndividual(<http://epcis.example.com/steps/pasteurization>))
+  ClassAssertion(Class(<http://epcis.example.com/UHTTreatment>) NamedIndividual(<http://epcis.example.com/steps/uht-treatment>))
+  ClassAssertion(Class(<http://epcis.example.com/Homogenization>) NamedIndividual(<http://epcis.example.com/steps/homogenization>))
+  ClassAssertion(Class(<http://epcis.example.com/Packaging>) NamedIndividual(<http://epcis.example.com/steps/packaging>))
+  ClassAssertion(Class(<http://epcis.example.com/Storage>) NamedIndividual(<http://epcis.example.com/steps/storage>))
+  ClassAssertion(Class(<http://epcis.example.com/Transportation>) NamedIndividual(<http://epcis.example.com/steps/transportation>))
+  ClassAssertion(Class(<http://epcis.example.com/Selling>) NamedIndividual(<http://epcis.example.com/steps/selling>))
+  
+  # Dispositions
+  ClassAssertion(Class(<http://epcis.example.com/InProduction>) NamedIndividual(<http://epcis.example.com/dispositions/in-production>))
+  ClassAssertion(Class(<http://epcis.example.com/InTransit>) NamedIndividual(<http://epcis.example.com/dispositions/in-transit>))
+  ClassAssertion(Class(<http://epcis.example.com/InStock>) NamedIndividual(<http://epcis.example.com/dispositions/in-stock>))
+  ClassAssertion(Class(<http://epcis.example.com/Active>) NamedIndividual(<http://epcis.example.com/dispositions/active>))
+  ClassAssertion(Class(<http://epcis.example.com/Sold>) NamedIndividual(<http://epcis.example.com/dispositions/sold>))
+  
+  # EPCs (Products)
+  ClassAssertion(Class(<http://epcis.example.com/UHTMilkProduct>) NamedIndividual(<http://epcis.example.com/products/milk-lot-001>))
+  ClassAssertion(Class(<http://epcis.example.com/UHTMilkProduct>) NamedIndividual(<http://epcis.example.com/products/milk-lot-002>))
+  ClassAssertion(Class(<http://epcis.example.com/UHTMilkProduct>) NamedIndividual(<http://epcis.example.com/products/milk-batch-A100>))
+  ClassAssertion(Class(<http://epcis.example.com/UHTMilkProduct>) NamedIndividual(<http://epcis.example.com/products/milk-batch-A101>))
+  ClassAssertion(Class(<http://epcis.example.com/UHTMilkProduct>) NamedIndividual(<http://epcis.example.com/products/final-product-12345>))
+)
