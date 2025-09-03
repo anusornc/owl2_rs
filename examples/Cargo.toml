@@ -1,0 +1,12 @@
+[package]
+name = "owl2_rs_examples"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[[example]]
+name = "basic_reasoning"
+path = "examples/basic_reasoning.rs"
+
+[dependencies]
+owl2_rs = { path = "." }

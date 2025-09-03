@@ -1,0 +1,27 @@
+Ontology(<http://example.com/test>
+  // Declare classes
+  Declaration(Class(<http://example.com/Person>))
+  Declaration(Class(<http://example.com/Student>))
+  Declaration(Class(<http://example.com/Employee>))
+  
+  // Declare object properties
+  Declaration(ObjectProperty(<http://example.com/worksFor>))
+  
+  // Declare individuals
+  Declaration(NamedIndividual(<http://example.com/john>))
+  Declaration(NamedIndividual(<http://example.com/jane>))
+  
+  // Define subsumption relationships
+  SubClassOf(Class(<http://example.com/Student>) Class(<http://example.com/Person>))
+  SubClassOf(Class(<http://example.com/Employee>) Class(<http://example.com/Person>))
+  
+  // Define disjointness
+  DisjointClasses(Class(<http://example.com/Student>) Class(<http://example.com/Employee>))
+  
+  // Assert individuals
+  ClassAssertion(Class(<http://example.com/Student>) NamedIndividual(<http://example.com/john>))
+  ClassAssertion(Class(<http://example.com/Employee>) NamedIndividual(<http://example.com/jane>))
+  
+  // Assert object property relationships
+  ObjectPropertyAssertion(ObjectProperty(<http://example.com/worksFor>) NamedIndividual(<http://example.com/jane>) NamedIndividual(<http://example.com/company>))
+)

@@ -1,0 +1,90 @@
+WHITESPACE = _{" " | "\t" | "\n" | "\r"}
+
+iri_content = @{ ( !">" ~ ANY )* }
+iri = { "<" ~ iri_content ~ ">" }
+
+pnc_name = @{ ( 'a'..'z' | 'A'..'Z' ) ~ ( 'a'..'z' | 'A'..'Z' | '0'..'9' | "_" )* }
+
+prefix = { "Prefix(" ~ pnc_name ~ ":=" ~ iri ~ ")" }
+
+
+class = { "Class(" ~ iri ~ ")" }
+datatype = { "Datatype(" ~ iri ~ ")" }
+object_property = { "ObjectProperty(" ~ iri ~ ")" }
+data_property = { "DataProperty(" ~ iri ~ ")" }
+annotation_property = { "AnnotationProperty(" ~ iri ~ ")" }
+named_individual = { "NamedIndividual(" ~ iri ~ ")" }
+
+entity = { class | datatype | object_property | data_property | annotation_property | named_individual }
+
+literal_value = @{ ( !"\"" ~ ANY )* }
+lang_content = @{ ( 'a'..'z' | 'A'..'Z' )+ ~ ( "-" ~ ( 'a'..'z' | 'A'..'Z' | '0'..'9' )+ )* }
+lang_tag = @{ lang_content }
+
+literal = { "\"" ~ literal_value ~ "\"" ~ ( "^^" ~ iri | "@" ~ lang_tag )? }
+
+object_intersection_of = { "ObjectIntersectionOf(" ~ class_expression+ ~ ")" }
+object_union_of = { "ObjectUnionOf(" ~ class_expression+ ~ ")" }
+object_complement_of = { "ObjectComplementOf(" ~ class_expression ~ ")" }
+object_one_of = { "ObjectOneOf(" ~ named_individual+ ~ ")" }
+object_some_values_from = { "ObjectSomeValuesFrom(" ~ object_property_expression ~ class_expression ~ ")" }
+object_all_values_from = { "ObjectAllValuesFrom(" ~ object_property_expression ~ class_expression ~ ")" }
+object_has_value = { "ObjectHasValue(" ~ object_property_expression ~ named_individual ~ ")" }
+object_has_self = { "ObjectHasSelf(" ~ object_property_expression ~ ")" }
+object_min_cardinality = { "ObjectMinCardinality(" ~ (ASCII_DIGIT+)+ ~ object_property_expression ~ class_expression? ~ ")" }
+object_max_cardinality = { "ObjectMaxCardinality(" ~ (ASCII_DIGIT+)+ ~ object_property_expression ~ class_expression? ~ ")" }
+object_exact_cardinality = { "ObjectExactCardinality(" ~ (ASCII_DIGIT+)+ ~ object_property_expression ~ class_expression? ~ ")" }
+
+class_expression = { class | object_intersection_of | object_union_of | object_complement_of | object_one_of | object_some_values_from | object_all_values_from | object_has_value | object_has_self | object_min_cardinality | object_max_cardinality | object_exact_cardinality }
+
+object_inverse_of_rule = { "ObjectInverseOf(" ~ object_property ~ ")" }
+object_property_expression = { object_property | object_inverse_of_rule }
+
+
+sub_class_of = { "SubClassOf(" ~ class_expression ~ class_expression ~ ")" }
+equivalent_classes = { "EquivalentClasses(" ~ class_expression+ ~ ")" }
+disjoint_classes = { "DisjointClasses(" ~ class_expression+ ~ ")" }
+disjoint_union = { "DisjointUnion(" ~ class ~ class_expression+ ~ ")" }
+
+class_axiom = { sub_class_of | equivalent_classes | disjoint_classes | disjoint_union }
+
+sub_object_property_of = { "SubObjectPropertyOf(" ~ object_property_expression ~ object_property_expression ~ ")" }
+equivalent_object_properties = { "EquivalentObjectProperties(" ~ object_property_expression+ ~ ")" }
+disjoint_object_properties = { "DisjointObjectProperties(" ~ object_property_expression+ ~ ")" }
+inverse_object_properties = { "InverseObjectProperties(" ~ object_property_expression ~ object_property_expression ~ ")" }
+object_property_domain = { "ObjectPropertyDomain(" ~ object_property_expression ~ class_expression ~ ")" }
+object_property_range = { "ObjectPropertyRange(" ~ object_property_expression ~ class_expression ~ ")" }
+functional_object_property = { "FunctionalObjectProperty(" ~ object_property_expression ~ ")" }
+inverse_functional_object_property = { "InverseFunctionalObjectProperty(" ~ object_property_expression ~ ")" }
+reflexive_object_property = { "ReflexiveObjectProperty(" ~ object_property_expression ~ ")" }
+irreflexive_object_property = { "IrreflexiveObjectProperty(" ~ object_property_expression ~ ")" }
+symmetric_object_property = { "SymmetricObjectProperty(" ~ object_property_expression ~ ")" }
+asymmetric_object_property = { "AsymmetricObjectProperty(" ~ object_property_expression ~ ")" }
+transitive_object_property = { "TransitiveObjectProperty(" ~ object_property_expression ~ ")" }
+
+object_property_axiom = { sub_object_property_of | equivalent_object_properties | disjoint_object_properties | inverse_object_properties | object_property_domain | object_property_range | functional_object_property | inverse_functional_object_property | reflexive_object_property | irreflexive_object_property | symmetric_object_property | asymmetric_object_property | transitive_object_property }
+
+
+sub_data_property_of = { "SubDataPropertyOf(" ~ data_property ~ data_property ~ ")" }
+equivalent_data_properties = { "EquivalentDataProperties(" ~ data_property+ ~ ")" }
+disjoint_data_properties = { "DisjointDataProperties(" ~ data_property+ ~ ")" }
+data_property_domain = { "DataPropertyDomain(" ~ data_property ~ class_expression ~ ")" }
+data_property_range = { "DataPropertyRange(" ~ data_property ~ datatype ~ ")" }
+functional_data_property = { "FunctionalDataProperty(" ~ data_property ~ ")" }
+
+data_property_axiom = { sub_data_property_of | equivalent_data_properties | disjoint_data_properties | data_property_domain | data_property_range | functional_data_property }
+
+
+same_individual = { "SameIndividual(" ~ named_individual+ ~ ")" }
+different_individuals = { "DifferentIndividuals(" ~ named_individual+ ~ ")" }
+class_assertion = { "ClassAssertion(" ~ class_expression ~ named_individual ~ ")" }
+object_property_assertion = { "ObjectPropertyAssertion(" ~ object_property_expression ~ named_individual ~ named_individual ~ ")" }
+data_property_assertion = { "DataPropertyAssertion(" ~ data_property ~ named_individual ~ literal ~ ")" }
+negative_object_property_assertion = { "NegativeObjectPropertyAssertion(" ~ object_property_expression ~ named_individual ~ named_individual ~ ")" }
+negative_data_property_assertion = { "NegativeDataPropertyAssertion(" ~ data_property ~ named_individual ~ literal ~ ")" }
+
+assertion = { same_individual | different_individuals | class_assertion | object_property_assertion | data_property_assertion | negative_object_property_assertion | negative_data_property_assertion }
+
+axiom = { class_axiom | object_property_axiom | data_property_axiom | assertion }
+
+ontology = { "Ontology(" ~ iri? ~ axiom* ~ ")" }

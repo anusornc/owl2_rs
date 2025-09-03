@@ -1,0 +1,1 @@
+Ontology(<http://example.com/test> SubClassOf(Class(<http://example.com/Student>) Class(<http://example.com/Person>)) ClassAssertion(Class(<http://example.com/Student>) NamedIndividual(<http://example.com/john>)))

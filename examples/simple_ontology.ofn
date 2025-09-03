@@ -1,0 +1,15 @@
+Ontology(&lt;http://example.com/ontology&gt;
+  SubClassOf(Class(&lt;http://example.com/Student&gt;) Class(&lt;http://example.com/Person&gt;))
+  SubClassOf(Class(&lt;http://example.com/Employee&gt;) Class(&lt;http.com/Person&gt;))
+  
+  DisjointClasses(Class(&lt;http://example.com/Student&gt;) Class(&lt;http://example.com/Employee&gt;))
+  
+  ObjectPropertyDomain(ObjectProperty(&lt;http://example.com/worksFor&gt;) Class(&lt;http://example.com/Employee&gt;))
+  ObjectPropertyRange(ObjectProperty(&lt;http://example.com/worksFor&gt;) Class(&lt;http://example.com/Organization&gt;))
+  
+  DataPropertyDomain(DataProperty(&lt;http://example.com/hasAge&gt;) Class(&lt;http://example.com/Person&gt;))
+  DataPropertyRange(DataProperty(&lt;http://example.com/hasAge&gt;) Datatype(&lt;http://www.w3.org/2001/XMLSchema#integer&gt;))
+  
+  ClassAssertion(Class(&lt;http://example.com/Student&gt;) NamedIndividual(&lt;http://example.com/john&gt;))
+  DataPropertyAssertion(DataProperty(&lt;http://example.com/hasAge&gt;) NamedIndividual(&lt;http://example.com/john&gt;) "22"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt;)
+)
