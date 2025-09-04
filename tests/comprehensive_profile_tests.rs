@@ -5,8 +5,6 @@
 use owl2_rs::{
     api::load_ontology,
     owl2_profile::{check_profile_compliance, OwlProfile},
-    Class, ClassExpression, DataProperty, Datatype, IRI, 
-    ObjectProperty, ObjectPropertyExpression, Individual, DataRange
 };
 
 #[test]

@@ -33,14 +33,15 @@ object_some_values_from = { "ObjectSomeValuesFrom(" ~ object_property_expression
 object_all_values_from = { "ObjectAllValuesFrom(" ~ object_property_expression ~ class_expression ~ ")" }
 object_has_value = { "ObjectHasValue(" ~ object_property_expression ~ named_individual ~ ")" }
 object_has_self = { "ObjectHasSelf(" ~ object_property_expression ~ ")" }
-object_min_cardinality = { "ObjectMinCardinality(" ~ (ASCII_DIGIT+)+ ~ object_property_expression ~ class_expression? ~ ")" }
-object_max_cardinality = { "ObjectMaxCardinality(" ~ (ASCII_DIGIT+)+ ~ object_property_expression ~ class_expression? ~ ")" }
-object_exact_cardinality = { "ObjectExactCardinality(" ~ (ASCII_DIGIT+)+ ~ object_property_expression ~ class_expression? ~ ")" }
+object_min_cardinality = { "ObjectMinCardinality(" ~ ASCII_DIGIT+ ~ object_property_expression ~ class_expression? ~ ")" }
+object_max_cardinality = { "ObjectMaxCardinality(" ~ ASCII_DIGIT+ ~ object_property_expression ~ class_expression? ~ ")" }
+object_exact_cardinality = { "ObjectExactCardinality(" ~ ASCII_DIGIT+ ~ object_property_expression ~ class_expression? ~ ")" }
 
 class_expression = { class | object_intersection_of | object_union_of | object_complement_of | object_one_of | object_some_values_from | object_all_values_from | object_has_value | object_has_self | object_min_cardinality | object_max_cardinality | object_exact_cardinality }
 
 object_inverse_of_rule = { "ObjectInverseOf(" ~ object_property ~ ")" }
-object_property_expression = { object_property | object_inverse_of_rule }
+object_property_chain = { "ObjectPropertyChain(" ~ object_property_expression* ~ ")" }
+object_property_expression = { object_property | object_inverse_of_rule | object_property_chain }
 
 
 sub_class_of = { "SubClassOf(" ~ class_expression ~ class_expression ~ ")" }

@@ -6,7 +6,7 @@
 use crate::{
     Axiom, ClassAxiom, ObjectPropertyAxiom, DataPropertyAxiom, 
     Assertion, ClassExpression, ObjectPropertyExpression,
-    Ontology, DataRange
+    Ontology
 };
 
 /// Represents the OWL 2 profiles
@@ -263,7 +263,10 @@ fn check_el_assertion(assertion: &Assertion, violations: &mut Vec<String>) {
             }
         },
         Assertion::NegativeDataPropertyAssertion { property: _, source: _, target: _ } => {
-            // All negative data property assertions are EL-compliant
+            // All negative data property assertions are allowed in RL
+        },
+        Assertion::HasKey { class: _, object_property_expression: _, data_property: _ } => {
+            // HasKey is allowed in RL
         },
     }
 }
@@ -467,17 +470,7 @@ fn is_ql_valid_class_expression(expr: &ClassExpression) -> bool {
     }
 }
 
-/// Checks if a data range is valid in QL
-fn is_ql_valid_data_range(range: &crate::DataRange) -> bool {
-    match range {
-        crate::DataRange::Datatype(_) => true,
-        crate::DataRange::DataIntersectionOf(sub_ranges) => {
-            sub_ranges.iter().all(|sub_range| is_ql_valid_data_range(sub_range))
-        },
-        // All other data ranges are not allowed in QL
-        _ => false,
-    }
-}
+
 
 /// Checks if a class expression is valid in RL
 fn is_rl_valid_class_expression(expr: &ClassExpression) -> bool {
@@ -515,8 +508,6 @@ fn is_rl_valid_class_expression(expr: &ClassExpression) -> bool {
             // Only exact 0 or 1 allowed in RL
             *cardinality <= 1 && filler.as_ref().map_or(true, |f| is_rl_valid_class_expression(f))
         },
-        // All other class expressions are not allowed in RL
-        _ => false,
     }
 }
 
@@ -627,7 +618,7 @@ fn is_rl_subclass_expression(expr: &ClassExpression) -> bool {
         },
         ClassExpression::ObjectSomeValuesFrom { property, filler } => {
             // Some values from is RL-compliant if property and filler are RL-compliant
-            is_rl_object_property_expression(property) && is_rl_class_expression(filler)
+            is_rl_object_property_expression(property) && is_rl_subclass_expression(filler)
         },
         ClassExpression::ObjectHasValue { property, value: _ } => {
             // Has value is RL-compliant if property is RL-compliant
@@ -646,17 +637,25 @@ fn is_rl_superclass_expression(expr: &ClassExpression) -> bool {
             // Intersections are RL-compliant if all sub-expressions are RL-compliant
             sub_exprs.iter().all(|sub_expr| is_rl_superclass_expression(sub_expr))
         },
+        ClassExpression::ObjectUnionOf(sub_exprs) => {
+            // Unions are RL-compliant if all sub-expressions are RL-compliant
+            sub_exprs.iter().all(|sub_expr| is_rl_superclass_expression(sub_expr))
+        },
+        ClassExpression::ObjectOneOf(individuals) => {
+            // Enumerations are RL-compliant
+            !individuals.is_empty()
+        },
         ClassExpression::ObjectComplementOf(sub_expr) => {
             // Complement is RL-compliant if sub-expression is RL-compliant
-            is_rl_class_expression(sub_expr)
+            is_rl_superclass_expression(sub_expr)
         },
         ClassExpression::ObjectSomeValuesFrom { property, filler } => {
             // Some values from is RL-compliant if property and filler are RL-compliant
-            is_rl_object_property_expression(property) && is_rl_class_expression(filler)
+            is_rl_object_property_expression(property) && is_rl_superclass_expression(filler)
         },
         ClassExpression::ObjectAllValuesFrom { property, filler } => {
             // All values from is RL-compliant if property and filler are RL-compliant
-            is_rl_object_property_expression(property) && is_rl_class_expression(filler)
+            is_rl_object_property_expression(property) && is_rl_superclass_expression(filler)
         },
         ClassExpression::ObjectHasValue { property, value: _ } => {
             // Has value is RL-compliant if property is RL-compliant
@@ -665,7 +664,7 @@ fn is_rl_superclass_expression(expr: &ClassExpression) -> bool {
         ClassExpression::ObjectMaxCardinality { max, property, filler } => {
             // Only max 0 or 1 allowed in RL
             *max <= 1 && is_rl_object_property_expression(property) && 
-            filler.as_ref().map_or(true, |f| is_rl_class_expression(f))
+            filler.as_ref().map_or(true, |f| is_rl_superclass_expression(f))
         },
         // All other class expressions are not RL-compliant in superclass position
         _ => false,
@@ -689,53 +688,7 @@ fn is_rl_equivalent_expression(expr: &ClassExpression) -> bool {
     }
 }
 
-/// Checks if a class expression is RL-compliant (general)
-fn is_rl_class_expression(expr: &ClassExpression) -> bool {
-    match expr {
-        ClassExpression::Class(_) => true,
-        ClassExpression::ObjectIntersectionOf(sub_exprs) => {
-            sub_exprs.iter().all(|sub_expr| is_rl_class_expression(sub_expr))
-        },
-        ClassExpression::ObjectUnionOf(sub_exprs) => {
-            sub_exprs.iter().all(|sub_expr| is_rl_class_expression(sub_expr))
-        },
-        ClassExpression::ObjectComplementOf(sub_expr) => {
-            is_rl_class_expression(sub_expr)
-        },
-        ClassExpression::ObjectOneOf(individuals) => {
-            !individuals.is_empty()
-        },
-        ClassExpression::ObjectSomeValuesFrom { property, filler } => {
-            is_rl_object_property_expression(property) && is_rl_class_expression(filler)
-        },
-        ClassExpression::ObjectAllValuesFrom { property, filler } => {
-            is_rl_object_property_expression(property) && is_rl_class_expression(filler)
-        },
-        ClassExpression::ObjectHasValue { property, value: _ } => {
-            is_rl_object_property_expression(property)
-        },
-        ClassExpression::ObjectHasSelf(property) => {
-            is_rl_object_property_expression(property)
-        },
-        ClassExpression::ObjectMinCardinality { min, property, filler } => {
-            // Only min 0 or 1 allowed in RL
-            *min <= 1 && is_rl_object_property_expression(property) && 
-            filler.as_ref().map_or(true, |f| is_rl_class_expression(f))
-        },
-        ClassExpression::ObjectMaxCardinality { max, property, filler } => {
-            // Only max 0 or 1 allowed in RL
-            *max <= 1 && is_rl_object_property_expression(property) && 
-            filler.as_ref().map_or(true, |f| is_rl_class_expression(f))
-        },
-        ClassExpression::ObjectExactCardinality { cardinality, property, filler } => {
-            // Only exact 0 or 1 allowed in RL
-            *cardinality <= 1 && is_rl_object_property_expression(property) && 
-            filler.as_ref().map_or(true, |f| is_rl_class_expression(f))
-        },
-        // All other class expressions are not RL-compliant
-        _ => false,
-    }
-}
+
 
 /// Checks if an object property expression is RL-compliant
 fn is_rl_object_property_expression(expr: &ObjectPropertyExpression) -> bool {
@@ -744,22 +697,6 @@ fn is_rl_object_property_expression(expr: &ObjectPropertyExpression) -> bool {
         ObjectPropertyExpression::InverseObjectProperty(_) => true,
         // Property chains are not RL-compliant
         ObjectPropertyExpression::ObjectPropertyChain(_) => false,
-    }
-}
-
-/// Checks if a data range is RL-compliant
-fn is_rl_data_range(range: &DataRange) -> bool {
-    match range {
-        DataRange::Datatype(datatype) => {
-            // RL does not support owl:real and owl:rational
-            let iri = &datatype.0.0;
-            !iri.contains("owl:real") && !iri.contains("owl:rational")
-        },
-        DataRange::DataIntersectionOf(sub_ranges) => {
-            sub_ranges.iter().all(|sub_range| is_rl_data_range(sub_range))
-        },
-        // All other data ranges are not RL-compliant
-        _ => false,
     }
 }
 

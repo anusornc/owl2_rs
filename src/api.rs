@@ -37,7 +37,7 @@ pub enum Owl2RsError {
     ///
     /// This error is returned when there are issues reading from or writing to
     /// files or other I/O operations.
-    #[error("I/O error: {0")]
+    #[error("I/O error: {0}")]
     IoError(#[from] io::Error),
 }
 
@@ -71,7 +71,7 @@ pub fn load_ontology(input: &str) -> Result<Ontology, Owl2RsError> {
     let parsed_ontology = OWLParser::parse_ontology(input);
     match parsed_ontology {
         Ok(ontology) => Ok(ontology),
-        Err(e) => Err(Owl2RsError::ParsingError(Box::new(e))),
+        Err(e) => Err(Owl2RsError::ParsingError(e)),
     }
 }
 

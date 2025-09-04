@@ -168,6 +168,10 @@ impl TableauReasoner {
                     crate::Assertion::NegativeDataPropertyAssertion { property: _, source, target: _ } => {
                         self.graph.get_or_create_node(source);
                     }
+                    crate::Assertion::HasKey { class: _, object_property_expression: _, data_property: _ } => {
+                        // For now, we just ensure the individual exists in the graph
+                        // In a full implementation, we would handle the HasKey constraint
+                    }
                 },
                 _ => {
                     // Other axiom types are handled during the expansion phase
