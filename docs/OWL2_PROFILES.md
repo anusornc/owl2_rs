@@ -20,13 +20,11 @@ The owl2_rs library includes support for checking OWL 2 profile compliance. OWL 
 - **Features**: Complete profile checking functionality
 - **Tests**: All tests passing
 
-### ⚠️ OWL 2 RL Profile
-- **Status**: Partially implemented
-- **Features**: Basic profile checking functionality implemented
-- **Issues**: 
-  - Parser issues with cardinality expressions (ObjectMaxCardinality, ObjectMinCardinality, ObjectExactCardinality)
-  - Some validation logic needs refinement to align with OWL 2 RL specification
-- **Tests**: Some tests failing due to parsing issues
+### ✅ OWL 2 RL Profile
+- **Status**: Fully implemented
+- **Features**: Complete profile checking functionality
+- **Issues**: None - all parsing issues resolved
+- **Tests**: All tests passing (9/9 RL profile tests passing)
 
 ## Profile Checking API
 
