@@ -7,7 +7,8 @@ This document provides detailed documentation for the public API of the owl2_rs 
 1. [Main Modules](#main-modules)
 2. [Loading Ontologies](#loading-ontologies)
 3. [Reasoning](#reasoning)
-4. [Core Data Structures](#core-data-structures)
+4. [Profile Checking](#profile-checking)
+5. [Core Data Structures](#core-data-structures)
 
 ## Main Modules
 
@@ -16,6 +17,7 @@ The owl2_rs library is organized into several modules:
 - `api`: The main public API for the library
 - `parser`: The OWL 2 parser implementation
 - `reasoner`: The tableau-based reasoner implementation
+- `owl2_profile`: OWL 2 profile compliance checking
 
 For most use cases, you'll only need to interact with the `api` module.
 
@@ -181,6 +183,74 @@ let ontology_str = r#"Ontology(<http://example.com/ontology>
 let ontology = load_ontology(ontology_str).unwrap();
 let mut reasoner = Reasoner::new(ontology);
 let individual_types = reasoner.realize();
+```
+
+## Profile Checking
+
+### `owl2_profile` Module
+
+The `owl2_profile` module provides functionality for checking OWL 2 profile compliance.
+
+#### `OwlProfile`
+
+An enum representing the OWL 2 profiles:
+
+```rust
+pub enum OwlProfile {
+    EL,  // OWL 2 EL profile
+    QL,  // OWL 2 QL profile
+    RL,  // OWL 2 RL profile
+    Full, // Full OWL 2
+}
+```
+
+#### `ProfileCheckResult`
+
+A struct containing the results of profile checking:
+
+```rust
+pub struct ProfileCheckResult {
+    pub profile: OwlProfile,
+    pub conforms: bool,
+    pub violations: Vec<String>,
+}
+```
+
+#### `check_profile_compliance`
+
+```rust
+pub fn check_profile_compliance(ontology: &Ontology, profile: OwlProfile) -> ProfileCheckResult
+```
+
+Checks if an ontology conforms to a specific OWL 2 profile.
+
+**Arguments:**
+- `ontology`: The ontology to check.
+- `profile`: The OWL 2 profile to check against.
+
+**Returns:**
+A `ProfileCheckResult` containing the checking results.
+
+**Example:**
+```rust
+use owl2_rs::api::load_ontology;
+use owl2_rs::owl2_profile::{check_profile_compliance, OwlProfile};
+
+let ontology_str = r#"Ontology(<http://example.com/ontology>
+  SubClassOf(Class(<http://example.com/Student>) Class(<http://example.com/Person>))
+)"#;
+
+let ontology = load_ontology(ontology_str)?;
+let result = check_profile_compliance(&ontology, OwlProfile::EL);
+
+if result.conforms {
+    println!("Ontology conforms to OWL 2 EL profile");
+} else {
+    println!("Ontology does not conform to OWL 2 EL profile");
+    for violation in &result.violations {
+        println!("Violation: {}", violation);
+    }
+}
 ```
 
 ## Core Data Structures

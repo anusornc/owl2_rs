@@ -9,6 +9,7 @@ OWL2_rs is a Rust implementation of an OWL 2 parser and reasoner. It provides fu
 - Parse OWL 2 ontologies in Functional-Style Syntax
 - Check ontology consistency
 - Compute class hierarchies (classification)
+- Check OWL 2 profile compliance (EL, QL, RL)
 - Process complex OWL 2 constructs
 
 ## Features
@@ -18,6 +19,7 @@ OWL2_rs is a Rust implementation of an OWL 2 parser and reasoner. It provides fu
 - Tableau-based reasoner
 - Consistency checking
 - Classification (subsumption hierarchy computation)
+- OWL 2 profile compliance checking (EL, QL, RL)
 
 ## Installation
 

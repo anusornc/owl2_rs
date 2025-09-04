@@ -10,6 +10,7 @@ This document provides step-by-step tutorials for common use cases of the owl2_r
 4. [Realizing Individuals](#realizing-individuals)
 5. [Instance Checking](#instance-checking)
 6. [Working with Complex Ontologies](#working-with-complex-ontologies)
+7. [Checking OWL 2 Profile Compliance](#checking-owl-2-profile-compliance)
 
 ## Parsing a Simple Ontology
 
@@ -235,6 +236,71 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Realize individuals
     let individual_types = reasoner.realize();
     println!("Realized {} individuals", individual_types.len());
+    
+    Ok(())
+}
+```
+
+## Checking OWL 2 Profile Compliance
+
+This tutorial shows how to check if an ontology conforms to OWL 2 profiles.
+
+```rust
+use owl2_rs::api::load_ontology;
+use owl2_rs::owl2_profile::{check_profile_compliance, OwlProfile};
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Define an EL-compliant ontology
+    let el_ontology_str = r#"Ontology(<http://example.com/ontology>
+      SubClassOf(Class(<http://example.com/Student>) Class(<http://example.com/Person>))
+      
+      ObjectPropertyDomain(ObjectProperty(<http://example.com/hasParent>) Class(<http://example.com/Person>))
+      ObjectPropertyRange(ObjectProperty(<http://example.com/hasParent>) Class(<http://example.com/Person>))
+      
+      DataPropertyDomain(DataProperty(<http://example.com/hasAge>) Class(<http://example.com/Person>))
+      DataPropertyRange(DataProperty(<http://example.com/hasAge>) Datatype(<http://www.w3.org/2001/XMLSchema#integer>))
+      
+      FunctionalDataProperty(DataProperty(<http://example.com/hasAge>))
+      
+      ClassAssertion(Class(<http://example.com/Student>) NamedIndividual(<http://example.com/john>))
+      ObjectPropertyAssertion(ObjectProperty(<http://example.com/hasParent>) NamedIndividual(<http://example.com/john>) NamedIndividual(<http://example.com/mary>))
+      DataPropertyAssertion(DataProperty(<http://example.com/hasAge>) NamedIndividual(<http://example.com/john>) "22"^^<http://www.w3.org/2001/XMLSchema#integer>)
+    )"#;
+    
+    // Parse the ontology
+    let ontology = load_ontology(el_ontology_str)?;
+    
+    // Check if it conforms to the EL profile
+    let el_result = check_profile_compliance(&ontology, OwlProfile::EL);
+    
+    if el_result.conforms {
+        println!("Ontology conforms to OWL 2 EL profile");
+    } else {
+        println!("Ontology does not conform to OWL 2 EL profile");
+        for violation in &el_result.violations {
+            println!("  Violation: {}", violation);
+        }
+    }
+    
+    // Define a full OWL 2 ontology with union (not EL-compliant)
+    let full_ontology_str = r#"Ontology(<http://example.com/ontology>
+      SubClassOf(ObjectUnionOf(Class(<http://example.com/Student>) Class(<http://example.com/Employee>)) Class(<http://example.com/Person>))
+    )"#;
+    
+    // Parse the ontology
+    let full_ontology = load_ontology(full_ontology_str)?;
+    
+    // Check if it conforms to the EL profile
+    let full_result = check_profile_compliance(&full_ontology, OwlProfile::EL);
+    
+    if full_result.conforms {
+        println!("Full ontology conforms to OWL 2 EL profile");
+    } else {
+        println!("Full ontology does not conform to OWL 2 EL profile");
+        for violation in &full_result.violations {
+            println!("  Violation: {}", violation);
+        }
+    }
     
     Ok(())
 }

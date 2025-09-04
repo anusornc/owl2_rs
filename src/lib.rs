@@ -18,12 +18,14 @@
 //! - Compute class hierarchies (classification)
 //! - Realize individuals (find their most specific types)
 //! - Instance checking
+//! - OWL 2 profile compliance checking (EL, QL, RL)
 //!
 //! ## Modules
 //!
 //! - [`api`] - The main public API for the library
 //! - [`parser`] - The OWL 2 parser implementation
 //! - [`reasoner`] - The tableau-based reasoner implementation
+//! - [`owl2_profile`] - OWL 2 profile compliance checking
 //!
 //! ## Basic Usage
 //!
@@ -63,6 +65,7 @@ pub mod parser;
 pub mod reasoner;
 pub mod api;
 pub mod test_runner;
+pub mod owl2_profile;
 
 /// An Internationalized Resource Identifier (IRI).
 ///

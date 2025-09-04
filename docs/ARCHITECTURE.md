@@ -8,7 +8,8 @@ This document describes the architecture and design decisions of the owl2_rs lib
 2. [Core Components](#core-components)
 3. [Parser Design](#parser-design)
 4. [Reasoner Design](#reasoner-design)
-5. [Data Structures](#data-structures)
+5. [Profile Checking Design](#profile-checking-design)
+6. [Data Structures](#data-structures)
 
 ## Overview
 
@@ -17,6 +18,7 @@ The owl2_rs library is organized into three main components:
 1. **Parser**: Responsible for parsing OWL 2 Functional-Style Syntax into internal data structures
 2. **Data Structures**: Core Rust structs and enums that represent OWL 2 constructs
 3. **Reasoner**: Implements reasoning algorithms for consistency checking, classification, and realization
+4. **Profile Checker**: Implements OWL 2 profile compliance checking
 
 ## Core Components
 
@@ -64,6 +66,19 @@ Key design decisions:
 - Separates the tableau algorithm from the OWL 2 specific logic
 - Provides incremental reasoning capabilities
 
+### Profile Checker
+
+The profile checker implements functionality for checking OWL 2 profile compliance. It includes:
+
+- Profile definitions (EL, QL, RL, Full)
+- Profile compliance checking algorithms
+- Violation reporting mechanisms
+
+Key design decisions:
+- Extensible design for adding new profiles
+- Detailed violation reporting
+- Separation of profile checking logic from core reasoning
+
 ## Parser Design
 
 ### Grammar
@@ -110,7 +125,7 @@ The main reasoner struct that contains:
 Manages:
 - Nodes representing individuals
 - Concepts associated with nodes
-- Role assertions between nodes
+- Role relationships between nodes
 - Fresh individual generation
 
 #### `Node`
@@ -126,6 +141,32 @@ Represents an individual with:
 2. **Disjunction Rule**: If an individual is an instance of A ⊔ B, then it is also an instance of either A or B
 3. **Existential Rule**: If an individual is an instance of ∃R.C, then there must exist another individual connected via R that is an instance of C
 4. **Universal Rule**: If an individual is an instance of ∀R.C, then for every individual connected via R, that individual must be an instance of C
+
+## Profile Checking Design
+
+### OWL 2 Profiles
+
+The profile checker implements checking for the main OWL 2 profiles:
+
+1. **OWL 2 EL**: Designed for ontologies with large numbers of individuals
+2. **OWL 2 QL**: Designed for querying large databases
+3. **OWL 2 RL**: Designed for rule-based reasoning
+
+### Design Principles
+
+1. **Extensibility**: Easy to add new profiles or extend existing ones
+2. **Detailed Reporting**: Provides specific violation information
+3. **Performance**: Efficient checking algorithms
+4. **Accuracy**: Correct implementation of profile restrictions
+
+### Implementation
+
+The profile checking is implemented in `src/owl2_profile.rs` and includes:
+
+- Profile definitions as Rust enums
+- Compliance checking functions for each profile
+- Violation reporting mechanisms
+- Helper functions for checking specific constructs
 
 ## Data Structures
 

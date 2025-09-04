@@ -8,3 +8,4 @@
 - [Testing](TESTING.md)
 - [Contributing](CONTRIBUTING.md)
 - [Performance](PERFORMANCE.md)
+- [OWL 2 Profiles](OWL2_PROFILES.md)

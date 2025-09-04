@@ -9,7 +9,8 @@ This document describes the testing framework for the owl2_rs library and how to
 3. [Test Structure](#test-structure)
 4. [Writing Unit Tests](#writing-unit-tests)
 5. [Writing Integration Tests](#writing-integration-tests)
-6. [Test Cases](#test-cases)
+6. [Profile Testing](#profile-testing)
+7. [Test Cases](#test-cases)
 
 ## Overview
 
@@ -19,6 +20,7 @@ The owl2_rs library has a comprehensive test suite that includes:
 - Integration tests with standard OWL 2 test cases
 - Tests for the reasoner with known consistency/inconsistency results
 - Tests for classification with known class hierarchies
+- Tests for OWL 2 profile compliance checking
 
 The tests are organized into several categories:
 - Unit tests in each module (e.g., `src/lib.rs`, `src/parser.rs`, `src/reasoner.rs`)
@@ -41,6 +43,10 @@ cargo test --lib
 
 # Run integration tests only
 cargo test --test integration_tests
+
+# Run profile tests only
+cargo test --test owl2_profile_tests
+cargo test --test comprehensive_profile_tests
 
 # Run tests with a specific name pattern
 cargo test test_basic_consistency
@@ -158,6 +164,35 @@ fn test_subclass_relationship() {
     };
     
     run_owl2_test_case(test_case);
+}
+```
+
+## Profile Testing
+
+The library includes comprehensive tests for OWL 2 profile compliance checking:
+
+1. **Profile Compliance Tests**: Test that ontologies correctly identified as compliant/non-compliant
+2. **Violation Reporting Tests**: Test that specific violations are correctly reported
+3. **Edge Case Tests**: Test boundary conditions and complex ontology structures
+
+Profile tests are located in:
+- `tests/owl2_profile_tests.rs`: Basic profile checking tests
+- `tests/comprehensive_profile_tests.rs`: Comprehensive profile checking tests
+
+Example profile test:
+
+```rust
+#[test]
+fn test_el_profile_violation_union() {
+    let ontology_str = r#"Ontology(<http://example.com/ontology>
+  SubClassOf(ObjectUnionOf(Class(<http://example.com/Student>) Class(<http://example.com/Employee>)) Class(<http://example.com/Person>))
+)"#;
+    
+    let ontology = load_ontology(ontology_str).expect("Failed to parse ontology");
+    let result = check_profile_compliance(&ontology, OwlProfile::EL);
+    
+    assert!(!result.conforms, "Ontology with union should not conform to EL profile");
+    assert!(!result.violations.is_empty());
 }
 ```
 

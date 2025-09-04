@@ -23,6 +23,7 @@ The owl2_rs library provides functionality for working with OWL 2 ontologies, in
 - Computing class hierarchies (classification)
 - Realizing individuals (finding their most specific types)
 - Instance checking
+- OWL 2 profile compliance checking
 
 The library is built using the pest parser library for parsing and implements a tableau-based reasoner for reasoning tasks.
 
