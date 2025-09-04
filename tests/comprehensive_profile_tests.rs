@@ -1,10 +1,12 @@
-//! Comprehensive OWL 2 Profile Tests
+//! # Comprehensive OWL 2 Profile Tests
 //!
-//! These tests verify the OWL 2 profile checking functionality.
+//! These tests provide comprehensive coverage for all OWL 2 profiles (EL, QL, RL).
 
 use owl2_rs::{
     api::load_ontology,
-    owl2_profile::{check_profile_compliance, OwlProfile}
+    owl2_profile::{check_profile_compliance, OwlProfile},
+    Class, ClassExpression, DataProperty, Datatype, IRI, 
+    ObjectProperty, ObjectPropertyExpression, Individual, DataRange
 };
 
 #[test]

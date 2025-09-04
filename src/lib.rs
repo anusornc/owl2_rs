@@ -381,6 +381,11 @@ pub enum Assertion {
         source: Individual,
         target: Literal,
     },
+    HasKey {
+        class: Class,
+        object_property_expression: Vec<ObjectPropertyExpression>,
+        data_property: Vec<DataProperty>,
+    },
 }
 
 /// A general axiom type that encompasses all specific axiom types.

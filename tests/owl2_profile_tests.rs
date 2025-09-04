@@ -113,4 +113,60 @@ mod tests {
         let full_ontology = load_ontology(full_ontology_str).expect("Failed to parse full ontology");
         assert_eq!(full_ontology.axioms.len(), 1);
     }
+
+    /// Test QL profile checking
+    #[test]
+    fn test_ql_profile_checking() {
+        use owl2_rs::owl2_profile::{check_profile_compliance, OwlProfile};
+
+        // QL-compliant ontology
+        let ql_ontology_str = r#"Ontology(<http://example.com/ontology>
+  SubClassOf(Class(<http://example.com/Student>) Class(<http://example.com/Person>))
+  
+  ObjectPropertyDomain(ObjectProperty(<http://example.com/hasParent>) Class(<http://example.com/Person>))
+  
+  ClassAssertion(Class(<http://example.com/Student>) NamedIndividual(<http://example.com/john>))
+)"#;
+        
+        let ql_ontology = load_ontology(ql_ontology_str).expect("Failed to parse QL ontology");
+        let ql_result = check_profile_compliance(&ql_ontology, OwlProfile::QL);
+        assert!(ql_result.conforms);
+
+        // Non-QL compliant ontology (has TransitiveObjectProperty)
+        let non_ql_ontology_str = r#"Ontology(<http://example.com/ontology>
+  TransitiveObjectProperty(ObjectProperty(<http://example.com/ancestorOf>))
+)"#;
+        
+        let non_ql_ontology = load_ontology(non_ql_ontology_str).expect("Failed to parse non-QL ontology");
+        let non_ql_result = check_profile_compliance(&non_ql_ontology, OwlProfile::QL);
+        assert!(!non_ql_result.conforms);
+    }
+
+    /// Test RL profile checking
+    #[test]
+    fn test_rl_profile_checking() {
+        use owl2_rs::owl2_profile::{check_profile_compliance, OwlProfile};
+
+        // RL-compliant ontology
+        let rl_ontology_str = r#"Ontology(<http://example.com/ontology>
+  SubClassOf(Class(<http://example.com/Student>) Class(<http://example.com/Person>))
+  
+  ObjectPropertyDomain(ObjectProperty(<http://example.com/hasParent>) Class(<http://example.com/Person>))
+  
+  ClassAssertion(Class(<http://example.com/Student>) NamedIndividual(<http://example.com/john>))
+)"#;
+        
+        let rl_ontology = load_ontology(rl_ontology_str).expect("Failed to parse RL ontology");
+        let rl_result = check_profile_compliance(&rl_ontology, OwlProfile::RL);
+        assert!(rl_result.conforms);
+
+        // Non-RL compliant ontology (has ReflexiveObjectProperty)
+        let non_rl_ontology_str = r#"Ontology(<http://example.com/ontology>
+  ReflexiveObjectProperty(ObjectProperty(<http://example.com/knows>))
+)"#;
+        
+        let non_rl_ontology = load_ontology(non_rl_ontology_str).expect("Failed to parse non-RL ontology");
+        let non_rl_result = check_profile_compliance(&non_rl_ontology, OwlProfile::RL);
+        assert!(!non_rl_result.conforms);
+    }
 }

@@ -31,13 +31,13 @@ pub enum Owl2RsError {
     /// This error is returned when the OWL 2 parser encounters invalid syntax
     /// or other parsing issues.
     #[error("Parsing error: {0}")]
-    ParsingError(#[from] pest::error::Error<crate::parser::Rule>),
+    ParsingError(#[from] Box<pest::error::Error<crate::parser::Rule>>),
     
     /// An I/O error occurred.
     ///
     /// This error is returned when there are issues reading from or writing to
     /// files or other I/O operations.
-    #[error("I/O error: {0}")]
+    #[error("I/O error: {0")]
     IoError(#[from] io::Error),
 }
 
@@ -68,7 +68,11 @@ pub enum Owl2RsError {
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
 pub fn load_ontology(input: &str) -> Result<Ontology, Owl2RsError> {
-    Ok(OWLParser::parse_ontology(input)?)
+    let parsed_ontology = OWLParser::parse_ontology(input);
+    match parsed_ontology {
+        Ok(ontology) => Ok(ontology),
+        Err(e) => Err(Owl2RsError::ParsingError(Box::new(e))),
+    }
 }
 
 /// Loads an ontology from a file containing OWL 2 Functional-Style Syntax.
