@@ -77,3 +77,9 @@ pkg/
 # Test binaries
 **/tests/**/*
 !/tests/**/*.rs
+
+# Root-level markdown files (except specific ones)
+/*.md
+!/README.md
+!/LICENSE
+!/CONTRIBUTING.md
