@@ -26,6 +26,18 @@ The owl2_rs library includes support for checking OWL 2 profile compliance. OWL 
 - **Issues**: None - all parsing issues resolved
 - **Tests**: All tests passing (9/9 RL profile tests passing)
 
+## Future Development
+
+For information on the roadmap to make owl2_rs a world-class OWL 2 library, see the [World-Class Roadmap](../WORLD_CLASS_ROADMAP.md).
+
+This roadmap outlines enhancements including:
+- Incremental reasoning capabilities
+- Explanation generation for inferences
+- Full OWL 2 DL reasoning
+- SPARQL endpoint support
+- WebAssembly compilation for browser-based reasoning
+- And much more!
+
 ## Profile Checking API
 
 The library provides functionality to check if an ontology conforms to specific OWL 2 profiles:

@@ -37,6 +37,20 @@ All RL profile tests are now passing with all parsing issues resolved:
 
 The implementation now provides complete support for all three OWL 2 profiles (EL, QL, RL) with excellent performance characteristics.
 
+### 🌟 Future Roadmap
+
+For information on the roadmap to make owl2_rs a world-class OWL 2 library, see [WORLD_CLASS_ROADMAP.md](WORLD_CLASS_ROADMAP.md).
+
+This roadmap outlines a comprehensive plan spanning 18+ months to enhance owl2_rs with advanced features including:
+- Incremental reasoning capabilities
+- Explanation generation for inferences
+- Full OWL 2 DL reasoning
+- SPARQL endpoint support
+- WebAssembly compilation for browser-based reasoning
+- And much more!
+
+The roadmap is organized into four phases with clear milestones and deliverables for each stage of development.
+
 These issues are related to the parser's handling of cardinality expressions and need to be fixed in the grammar or parsing logic.
 
 ## Implementation Details
