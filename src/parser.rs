@@ -15,54 +15,170 @@ pub struct Prefix {
 impl OWLParser {
     pub fn parse_iri(input: &str) -> Result<IRI, Box<pest::error::Error<Rule>>> {
         let mut pairs = OWLParser::parse(Rule::iri, input)?;
-        let pair = pairs.next().unwrap();
-        let inner = pair.into_inner().find(|p| p.as_rule() == Rule::iri_content).unwrap();
+        let pair = pairs.next().ok_or_else(|| {
+            Box::new(pest::error::Error::new_from_span(
+                pest::error::ErrorVariant::CustomError {
+                    message: "Expected IRI but found nothing".to_string(),
+                },
+                pest::Span::new(input, 0, input.len()).unwrap_or_else(|_| pest::Span::new(" ", 0, 1).unwrap())
+            ))
+        })?;
+        let inner = pair.into_inner().find(|p| p.as_rule() == Rule::iri_content).ok_or_else(|| {
+            Box::new(pest::error::Error::new_from_span(
+                pest::error::ErrorVariant::CustomError {
+                    message: "Expected IRI content but found nothing".to_string(),
+                },
+                pair.as_span()
+            ))
+        })?;
         Ok(IRI(inner.as_str().to_string()))
     }
 
     pub fn parse_prefix(input: &str) -> Result<Prefix, Box<pest::error::Error<Rule>>> {
         let mut pairs = OWLParser::parse(Rule::prefix, input)?;
-        let pair = pairs.next().unwrap();
+        let pair = pairs.next().ok_or_else(|| {
+            Box::new(pest::error::Error::new_from_span(
+                pest::error::ErrorVariant::CustomError {
+                    message: "Expected prefix declaration but found nothing".to_string(),
+                },
+                pest::Span::new(input, 0, input.len()).unwrap_or_else(|_| pest::Span::new(" ", 0, 1).unwrap())
+            ))
+        })?;
         let mut inner = pair.into_inner();
-        let name = inner.next().unwrap().as_str().to_string();
-        let iri_str = inner.next().unwrap().into_inner().next().unwrap().as_str();
+        let name_pair = inner.next().ok_or_else(|| {
+            Box::new(pest::error::Error::new_from_span(
+                pest::error::ErrorVariant::CustomError {
+                    message: "Expected prefix name but found nothing".to_string(),
+                },
+                pair.as_span()
+            ))
+        })?;
+        let name = name_pair.as_str().to_string();
+        
+        let iri_pair = inner.next().ok_or_else(|| {
+            Box::new(pest::error::Error::new_from_span(
+                pest::error::ErrorVariant::CustomError {
+                    message: "Expected IRI for prefix but found nothing".to_string(),
+                },
+                pair.as_span()
+            ))
+        })?;
+        let iri_inner = iri_pair.into_inner().next().ok_or_else(|| {
+            Box::new(pest::error::Error::new_from_span(
+                pest::error::ErrorVariant::CustomError {
+                    message: "Expected IRI content but found nothing".to_string(),
+                },
+                iri_pair.as_span()
+            ))
+        })?;
+        let iri_str = iri_inner.as_str();
         let iri = IRI(iri_str.to_string());
         Ok(Prefix { name, iri })
     }
 
     pub fn parse_entity(input: &str) -> Result<Entity, Box<pest::error::Error<Rule>>> {
         let mut pairs = OWLParser::parse(Rule::entity, input)?;
-        let entity_rule_pair = pairs.next().unwrap(); // This is the pair for the matched entity rule (e.g., class, datatype)
+        let entity_rule_pair = pairs.next().ok_or_else(|| {
+            Box::new(pest::error::Error::new_from_span(
+                pest::error::ErrorVariant::CustomError {
+                    message: "Expected entity but found nothing".to_string(),
+                },
+                pest::Span::new(input, 0, input.len()).unwrap_or_else(|_| pest::Span::new(" ", 0, 1).unwrap())
+            ))
+        })?; // This is the pair for the matched entity rule (e.g., class, datatype)
 
-        let inner_rule_pair = entity_rule_pair.into_inner().next().unwrap(); // Get the inner rule (class, datatype, etc.)
+        let inner_rule_pair = entity_rule_pair.into_inner().next().ok_or_else(|| {
+            Box::new(pest::error::Error::new_from_span(
+                pest::error::ErrorVariant::CustomError {
+                    message: "Expected entity type but found nothing".to_string(),
+                },
+                entity_rule_pair.as_span()
+            ))
+        })?; // Get the inner rule (class, datatype, etc.)
 
         let entity = match inner_rule_pair.as_rule() {
             Rule::class => {
-                let iri_str = inner_rule_pair.into_inner().next().unwrap().as_str();
+                let iri_pair = inner_rule_pair.into_inner().next().ok_or_else(|| {
+                    Box::new(pest::error::Error::new_from_span(
+                        pest::error::ErrorVariant::CustomError {
+                            message: "Expected IRI for class but found nothing".to_string(),
+                        },
+                        inner_rule_pair.as_span()
+                    ))
+                })?;
+                let iri_str = iri_pair.as_str();
                 Entity::Class(Class(OWLParser::parse_iri(iri_str)?))
             },
             Rule::datatype => {
-                let iri_str = inner_rule_pair.into_inner().next().unwrap().as_str();
+                let iri_pair = inner_rule_pair.into_inner().next().ok_or_else(|| {
+                    Box::new(pest::error::Error::new_from_span(
+                        pest::error::ErrorVariant::CustomError {
+                            message: "Expected IRI for datatype but found nothing".to_string(),
+                        },
+                        inner_rule_pair.as_span()
+                    ))
+                })?;
+                let iri_str = iri_pair.as_str();
                 Entity::Datatype(Datatype(OWLParser::parse_iri(iri_str)?))
             },
             Rule::object_property => {
-                let iri_str = inner_rule_pair.into_inner().next().unwrap().as_str();
+                let iri_pair = inner_rule_pair.into_inner().next().ok_or_else(|| {
+                    Box::new(pest::error::Error::new_from_span(
+                        pest::error::ErrorVariant::CustomError {
+                            message: "Expected IRI for object property but found nothing".to_string(),
+                        },
+                        inner_rule_pair.as_span()
+                    ))
+                })?;
+                let iri_str = iri_pair.as_str();
                 Entity::ObjectProperty(ObjectProperty(OWLParser::parse_iri(iri_str)?))
             },
             Rule::data_property => {
-                let iri_str = inner_rule_pair.into_inner().next().unwrap().as_str();
+                let iri_pair = inner_rule_pair.into_inner().next().ok_or_else(|| {
+                    Box::new(pest::error::Error::new_from_span(
+                        pest::error::ErrorVariant::CustomError {
+                            message: "Expected IRI for data property but found nothing".to_string(),
+                        },
+                        inner_rule_pair.as_span()
+                    ))
+                })?;
+                let iri_str = iri_pair.as_str();
                 Entity::DataProperty(DataProperty(OWLParser::parse_iri(iri_str)?))
             },
             Rule::annotation_property => {
-                let iri_str = inner_rule_pair.into_inner().next().unwrap().as_str();
+                let iri_pair = inner_rule_pair.into_inner().next().ok_or_else(|| {
+                    Box::new(pest::error::Error::new_from_span(
+                        pest::error::ErrorVariant::CustomError {
+                            message: "Expected IRI for annotation property but found nothing".to_string(),
+                        },
+                        inner_rule_pair.as_span()
+                    ))
+                })?;
+                let iri_str = iri_pair.as_str();
                 Entity::AnnotationProperty(OWLParser::parse_iri(iri_str)?)
             },
             Rule::named_individual => {
-                let iri_str = inner_rule_pair.into_inner().next().unwrap().as_str();
+                let iri_pair = inner_rule_pair.into_inner().next().ok_or_else(|| {
+                    Box::new(pest::error::Error::new_from_span(
+                        pest::error::ErrorVariant::CustomError {
+                            message: "Expected IRI for named individual but found nothing".to_string(),
+                        },
+                        inner_rule_pair.as_span()
+                    ))
+                })?;
+                let iri_str = iri_pair.as_str();
                 Entity::NamedIndividual(OWLParser::parse_iri(iri_str)?)
             },
-            _ => unreachable!(),
+            _ => {
+                return Err(Box::new(pest::error::Error::new_from_span(
+                    pest::error::ErrorVariant::CustomError {
+                        message: format!("Unexpected entity type: {:?}", inner_rule_pair.as_rule()),
+                    },
+                    inner_rule_pair.as_span()
+                )));
+            }
         };
+
         Ok(entity)
     }
 
