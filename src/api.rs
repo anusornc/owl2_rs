@@ -39,6 +39,12 @@ pub enum Owl2RsError {
     /// files or other I/O operations.
     #[error("I/O error: {0}")]
     IoError(#[from] io::Error),
+    
+    /// An error occurred during streaming operations.
+    ///
+    /// This error is returned when there are issues with streaming large ontologies.
+    #[error("Streaming error: {0}")]
+    StreamingError(String),
 }
 
 /// Loads an ontology from a string in OWL 2 Functional-Style Syntax.
