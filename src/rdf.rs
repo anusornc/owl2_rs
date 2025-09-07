@@ -10,16 +10,85 @@
 //! ## Usage
 //! 
 //! ```rust,ignore
-//! use owl2_rs::rdf::load_ontology_from_jsonld;
+//! use owl2_rs::rdf::convert_rdf_format;
 //! 
-//! let ontology = load_ontology_from_jsonld("path/to/ontology.jsonld")?;
+//! convert_rdf_format("input.ttl", "output.rdf", RdfFormat::Turtle, RdfFormat::RdfXml)?;
 //! ```
 
 use crate::{Ontology, api::Owl2RsError};
 use std::path::Path;
-use std::io::BufReader;
-use oxrdfio::{RdfParser, RdfFormat};
+use std::io::{BufReader, BufWriter};
+use oxrdfio::{RdfParser, RdfSerializer, RdfFormat};
 use oxrdf::Quad;
+
+/// Converts an RDF file from one format to another.
+/// 
+/// # Arguments
+/// 
+/// * `input_path` - Path to the input RDF file
+/// * `output_path` - Path to the output RDF file
+/// * `input_format` - Format of the input file
+/// * `output_format` - Format of the output file
+/// 
+/// # Returns
+/// 
+/// * `Ok(())` - Conversion successful
+/// * `Err(Owl2RsError)` - An error if conversion fails
+pub fn convert_rdf_format<P: AsRef<Path>>(
+    input_path: P, 
+    output_path: P, 
+    input_format: RdfFormat, 
+    output_format: RdfFormat
+) -> Result<(), Owl2RsError> {
+    // Open input file
+    let input_file = std::fs::File::open(input_path).map_err(|e| Owl2RsError::IoError(e))?;
+    let reader = BufReader::new(input_file);
+    
+    // Open output file
+    let output_file = std::fs::File::create(output_path).map_err(|e| Owl2RsError::IoError(e))?;
+    let writer = BufWriter::new(output_file);
+    
+    // Create parser and serializer
+    let parser = RdfParser::from_format(input_format)
+        .for_reader(reader);
+    
+    let mut serializer = RdfSerializer::from_format(output_format)
+        .for_writer(writer);
+    
+    // Convert each quad
+    for quad_result in parser {
+        match quad_result {
+            Ok(quad) => {
+                serializer.serialize(&quad)
+                    .map_err(|e| Owl2RsError::ParsingError(Box::new(pest::error::Error::new_from_span(
+                        pest::error::ErrorVariant::CustomError {
+                            message: format!("Failed to serialize quad: {}", e),
+                        },
+                        pest::Span::new("", 0, 0).unwrap()
+                    ))))?;
+            },
+            Err(e) => {
+                return Err(Owl2RsError::ParsingError(Box::new(pest::error::Error::new_from_span(
+                    pest::error::ErrorVariant::CustomError {
+                        message: format!("Failed to parse quad: {}", e),
+                    },
+                    pest::Span::new("", 0, 0).unwrap()
+                ))));
+            }
+        }
+    }
+    
+    // Finish serialization
+    serializer.finish()
+        .map_err(|e| Owl2RsError::ParsingError(Box::new(pest::error::Error::new_from_span(
+            pest::error::ErrorVariant::CustomError {
+                message: format!("Failed to finish serialization: {}", e),
+            },
+            pest::Span::new("", 0, 0).unwrap()
+        ))))?;
+    
+    Ok(())
+}
 
 /// Loads an ontology from a JSON-LD file.
 /// 
