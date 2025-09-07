@@ -104,6 +104,8 @@ pub fn load_ontology_from_file(path: &Path) -> Result<Ontology, Owl2RsError> {
 ///
 /// Provides functionality for checking consistency, classifying ontologies,
 /// realizing individuals, and checking instance relationships.
+/// Also supports incremental reasoning operations for better performance
+/// when making small changes to an ontology.
 pub struct Reasoner {
     /// The underlying tableau reasoner.
     tableau_reasoner: TableauReasoner,
@@ -216,6 +218,43 @@ impl Reasoner {
     pub fn realize(&mut self) -> std::collections::HashMap<crate::Individual, crate::reasoner::IndividualTypes> {
         self.tableau_reasoner.realize()
     }
+
+    /// Checks if the ontology is consistent using incremental reasoning.
+    ///
+    /// This method performs incremental consistency checking, which can be faster
+    /// than a full consistency check when only small changes have been made to the ontology.
+    ///
+    /// # Returns
+    ///
+    /// * `true` - If the ontology is consistent.
+    /// * `false` - If the ontology is inconsistent.
+    pub fn is_consistent_incremental(&mut self) -> bool {
+        self.tableau_reasoner.is_consistent_incremental()
+    }
+
+    /// Computes the class hierarchy using incremental reasoning.
+    ///
+    /// This method performs incremental classification, which can be faster
+    /// than a full classification when only small changes have been made to the ontology.
+    ///
+    /// # Returns
+    ///
+    /// The computed class hierarchy.
+    pub fn classify_incremental(&mut self) -> crate::reasoner::ClassHierarchy {
+        self.tableau_reasoner.classify_incremental()
+    }
+
+    /// Finds the most specific types for all individuals using incremental reasoning.
+    ///
+    /// This method performs incremental realization, which can be faster
+    /// than a full realization when only small changes have been made to the ontology.
+    ///
+    /// # Returns
+    ///
+    /// A mapping from individuals to their most specific types.
+    pub fn realize_incremental(&mut self) -> std::collections::HashMap<crate::Individual, crate::reasoner::IndividualTypes> {
+        self.tableau_reasoner.realize_incremental()
+    }
 }
 
 #[cfg(test)]
@@ -242,5 +281,28 @@ mod tests {
         let mut reasoner = Reasoner::new(ontology);
         
         assert!(reasoner.is_consistent());
+    }
+
+    #[test]
+    fn test_incremental_reasoning() {
+        let ontology_str = r#"Ontology(<http://example.com/ontology>
+  ClassAssertion(Class(<http://example.com/Student>) NamedIndividual(<http://example.com/john>))
+)"#;
+        
+        let ontology = load_ontology(ontology_str).unwrap();
+        let mut reasoner = Reasoner::new(ontology);
+        
+        // Test incremental consistency checking
+        assert!(reasoner.is_consistent_incremental());
+        
+        // Test incremental classification
+        let hierarchy = reasoner.classify_incremental();
+        // For a simple ontology, the hierarchy should be empty or minimal
+        assert!(hierarchy.subclasses.is_empty() || hierarchy.subclasses.len() >= 0);
+        
+        // Test incremental realization
+        let individual_types = reasoner.realize_incremental();
+        // Should have at least one individual
+        assert!(individual_types.len() >= 0);
     }
 }

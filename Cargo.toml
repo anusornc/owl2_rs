@@ -13,6 +13,7 @@ categories = ["parser-implementations", "science"]
 pest = "2.8.1"
 pest_derive = "2.8.1"
 thiserror = "1.0"
+rayon = "1.7"
 
 [dev-dependencies]
 criterion = "0.5"

@@ -318,6 +318,7 @@ dependencies = [
  "criterion",
  "pest",
  "pest_derive",
+ "rayon",
  "thiserror 1.0.69",
 ]
 

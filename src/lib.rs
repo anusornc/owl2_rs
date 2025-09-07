@@ -397,6 +397,17 @@ pub enum Axiom {
     Assertion(Assertion),
 }
 
+/// Tracks changes made to an ontology for incremental reasoning.
+#[derive(Debug, Clone, Default)]
+pub struct ChangeTracker {
+    /// The revision number of the ontology.
+    pub revision: u64,
+    /// Axioms that have been added since the last reasoning operation.
+    pub added_axioms: Vec<Axiom>,
+    /// Axioms that have been removed since the last reasoning operation.
+    pub removed_axioms: Vec<Axiom>,
+}
+
 /// Represents a complete OWL 2 ontology.
 ///
 /// An ontology consists of a set of axioms that describe the relationships
@@ -406,6 +417,7 @@ pub enum Axiom {
 ///
 /// * `direct_imports` - IRIs of ontologies that are directly imported by this ontology.
 /// * `axioms` - The axioms that make up this ontology.
+/// * `change_tracker` - Tracks changes for incremental reasoning.
 ///
 /// # Examples
 ///
@@ -414,10 +426,21 @@ pub enum Axiom {
 ///
 /// let ontology = Ontology::default();
 /// ```
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct Ontology {
     pub direct_imports: Vec<IRI>,
     pub axioms: Vec<Axiom>,
+    pub change_tracker: ChangeTracker,
+}
+
+impl Default for Ontology {
+    fn default() -> Self {
+        Ontology {
+            direct_imports: Vec::new(),
+            axioms: Vec::new(),
+            change_tracker: ChangeTracker::default(),
+        }
+    }
 }
 
 
