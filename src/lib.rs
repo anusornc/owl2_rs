@@ -70,6 +70,9 @@ pub mod rdf;
 pub mod cache;
 pub mod sparql;
 
+#[cfg(target_arch = "wasm32")]
+pub mod wasm;
+
 /// An Internationalized Resource Identifier (IRI).
 ///
 /// IRIs are used throughout OWL 2 to identify entities such as classes,
