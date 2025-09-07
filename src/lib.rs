@@ -67,6 +67,7 @@ pub mod api;
 pub mod test_runner;
 pub mod owl2_profile;
 pub mod rdf;
+pub mod cache;
 
 /// An Internationalized Resource Identifier (IRI).
 ///
