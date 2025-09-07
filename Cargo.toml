@@ -15,6 +15,7 @@ pest_derive = "2.8.1"
 thiserror = "1.0"
 rayon = "1.7"
 oxrdfio = "0.2.0-beta.3"
+oxrdf = "0.3.0-beta.2"
 
 [dev-dependencies]
 criterion = "0.5"

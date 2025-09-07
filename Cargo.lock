@@ -333,6 +333,7 @@ name = "owl2_rs"
 version = "0.1.0"
 dependencies = [
  "criterion",
+ "oxrdf",
  "oxrdfio",
  "pest",
  "pest_derive",
