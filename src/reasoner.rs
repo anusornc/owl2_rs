@@ -116,6 +116,19 @@ impl ClassHierarchy {
     }
 }
 
+/// Represents a step in the derivation of an entailment.
+#[derive(Debug, Clone)]
+pub struct DerivationStep {
+    /// The conclusion of this step
+    pub conclusion: String,
+    /// The premises that led to this conclusion
+    pub premises: Vec<String>,
+    /// The rule that was applied
+    pub rule: String,
+    /// The axioms that justified this step
+    pub axioms: Vec<crate::Axiom>,
+}
+
 /// The main tableau reasoner.
 #[derive(Debug)]
 pub struct TableauReasoner {
@@ -123,6 +136,10 @@ pub struct TableauReasoner {
     pub ontology: Ontology,
     /// The completion graph
     pub graph: CompletionGraph,
+    /// Previous reasoning results for incremental updates
+    pub previous_results: Option<ReasoningResults>,
+    /// Tracks derivation steps for explanation generation
+    pub derivation_tracker: Vec<DerivationStep>,
 }
 
 impl TableauReasoner {
@@ -131,6 +148,8 @@ impl TableauReasoner {
         TableauReasoner {
             ontology,
             graph: CompletionGraph::new(),
+            previous_results: None,
+            derivation_tracker: Vec::new(),
         }
     }
 

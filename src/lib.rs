@@ -408,6 +408,28 @@ pub struct ChangeTracker {
     pub removed_axioms: Vec<Axiom>,
 }
 
+/// Represents an explanation for an entailment.
+#[derive(Debug, Clone)]
+pub struct Explanation {
+    /// The entailment being explained
+    pub entailment: String,
+    /// The axioms that justify the entailment
+    pub justifications: Vec<Axiom>,
+    /// A human-readable explanation
+    pub description: String,
+}
+
+/// Represents an explanation for an entailment.
+#[derive(Debug, Clone)]
+pub struct Explanation {
+    /// The entailment being explained
+    pub entailment: String,
+    /// The axioms that justify the entailment
+    pub justifications: Vec<Axiom>,
+    /// A human-readable explanation
+    pub description: String,
+}
+
 /// Represents a complete OWL 2 ontology.
 ///
 /// An ontology consists of a set of axioms that describe the relationships
