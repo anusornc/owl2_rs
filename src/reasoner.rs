@@ -5,6 +5,7 @@
 
 use crate::{Class, ClassExpression, Individual, ObjectPropertyExpression, Ontology};
 use std::collections::HashMap;
+use rayon::prelude::*;
 
 /// Represents a node in the completion graph of the tableau algorithm.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -249,17 +250,29 @@ impl TableauReasoner {
         
         // For each pair of classes (C, D), check if C is subsumed by D
         // This is done by checking if C ⊓ ¬D is unsatisfiable
-        for class_c in &classes {
-            for class_d in &classes {
-                if class_c != class_d {
-                    if self.is_subsumed_by(class_c, class_d) {
-                        // Add D as a superclass of C
-                        hierarchy.superclasses.entry(class_c.clone()).or_insert_with(Vec::new).push(class_d.clone());
-                        // Add C as a subclass of D
-                        hierarchy.subclasses.entry(class_d.clone()).or_insert_with(Vec::new).push(class_c.clone());
-                    }
-                }
-            }
+        // Use parallel iteration for better performance on large ontologies
+        let subsumption_results: Vec<_> = classes
+            .par_iter()
+            .flat_map(|class_c| {
+                classes
+                    .par_iter()
+                    .filter_map(|class_d| {
+                        if class_c != class_d && self.is_subsumed_by(class_c, class_d) {
+                            Some((class_c.clone(), class_d.clone()))
+                        } else {
+                            None
+                        }
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .collect();
+        
+        // Process the subsumption results to build the hierarchy
+        for (class_c, class_d) in subsumption_results {
+            // Add D as a superclass of C
+            hierarchy.superclasses.entry(class_c.clone()).or_insert_with(Vec::new).push(class_d.clone());
+            // Add C as a subclass of D
+            hierarchy.subclasses.entry(class_d.clone()).or_insert_with(Vec::new).push(class_c.clone());
         }
         
         hierarchy
