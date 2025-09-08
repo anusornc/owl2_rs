@@ -65,6 +65,7 @@ pub mod parser;
 pub mod reasoner;
 pub mod api;
 pub mod test_runner;
+<<<<<<< HEAD
 pub mod owl2_profile;
 pub mod rdf;
 pub mod cache;
@@ -72,6 +73,9 @@ pub mod sparql;
 
 #[cfg(target_arch = "wasm32")]
 pub mod wasm;
+=======
+pub mod incremental;
+>>>>>>> feature/integrate-phase1-incremental-reasoning
 
 /// An Internationalized Resource Identifier (IRI).
 ///
@@ -414,6 +418,7 @@ pub struct ChangeTracker {
     pub removed_axioms: Vec<Axiom>,
 }
 
+<<<<<<< HEAD
 /// Represents an explanation for an entailment.
 #[derive(Debug, Clone)]
 pub struct Explanation {
@@ -436,6 +441,8 @@ pub struct Explanation {
     pub description: String,
 }
 
+=======
+>>>>>>> feature/integrate-phase1-incremental-reasoning
 /// Represents a complete OWL 2 ontology.
 ///
 /// An ontology consists of a set of axioms that describe the relationships
@@ -445,6 +452,7 @@ pub struct Explanation {
 ///
 /// * `direct_imports` - IRIs of ontologies that are directly imported by this ontology.
 /// * `axioms` - The axioms that make up this ontology.
+<<<<<<< HEAD
 /// * `change_tracker` - Tracks changes for incremental reasoning.
 ///
 /// # Examples
@@ -455,10 +463,14 @@ pub struct Explanation {
 /// let ontology = Ontology::default();
 /// ```
 #[derive(Debug, Clone)]
+=======
+#[derive(Debug, Clone, Default)]
+>>>>>>> feature/integrate-phase1-incremental-reasoning
 pub struct Ontology {
     pub direct_imports: Vec<IRI>,
     pub axioms: Vec<Axiom>,
     pub change_tracker: ChangeTracker,
+<<<<<<< HEAD
 }
 
 impl Default for Ontology {
@@ -469,6 +481,8 @@ impl Default for Ontology {
             change_tracker: ChangeTracker::default(),
         }
     }
+=======
+>>>>>>> feature/integrate-phase1-incremental-reasoning
 }
 
 

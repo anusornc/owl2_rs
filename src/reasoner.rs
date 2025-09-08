@@ -826,6 +826,7 @@ mod tests {
         let ontology = Ontology {
             direct_imports: vec![],
             axioms: vec![axiom],
+            change_tracker: crate::ChangeTracker::default(),
         };
         
         let reasoner = TableauReasoner::new(ontology);
@@ -858,6 +859,7 @@ mod tests {
         let ontology = Ontology {
             direct_imports: vec![],
             axioms: vec![axiom],
+            change_tracker: crate::ChangeTracker::default(),
         };
         
         let reasoner = TableauReasoner::new(ontology);
@@ -884,6 +886,7 @@ mod tests {
         let ontology = Ontology {
             direct_imports: vec![],
             axioms: vec![axiom],
+            change_tracker: crate::ChangeTracker::default(),
         };
         
         let mut reasoner = TableauReasoner::new(ontology);
@@ -919,6 +922,7 @@ mod tests {
         let ontology = Ontology {
             direct_imports: vec![],
             axioms: vec![axiom],
+            change_tracker: crate::ChangeTracker::default(),
         };
         
         let mut reasoner = TableauReasoner::new(ontology);
@@ -950,6 +954,7 @@ mod tests {
         let ontology = Ontology {
             direct_imports: vec![],
             axioms: vec![axiom],
+            change_tracker: crate::ChangeTracker::default(),
         };
         
         let mut reasoner = TableauReasoner::new(ontology);
@@ -1125,6 +1130,7 @@ mod tests {
         let ontology = Ontology {
             direct_imports: vec![],
             axioms: vec![axiom],
+            change_tracker: crate::ChangeTracker::default(),
         };
         
         let reasoner = TableauReasoner::new(ontology);
@@ -1157,6 +1163,7 @@ mod tests {
         let ontology = Ontology {
             direct_imports: vec![],
             axioms: vec![axiom],
+            change_tracker: crate::ChangeTracker::default(),
         };
         
         let reasoner = TableauReasoner::new(ontology);
